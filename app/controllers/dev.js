@@ -4,33 +4,49 @@ export default Ember.Controller.extend({
   selected: null,
   treeRoot: function() {
     return {
-      text: 'Root',
+      name: 'Root',
+      visible: true,
+      type: 'sprite',
       children: [
         {
-          text: 'People',
+          name: 'People',
+          visible: true,
+          type: 'sprite',
           children: [
             {
-              text: 'Basketball players',
+              name: 'Basketball players',
+              visible: true,
+              type: 'animation',
               children: [
                 {
-                  text: 'LeBron James',
+                  name: 'LeBron James',
+                  visible: true,
+                  type: 'animation',
                   children: []
                 },
                 {
-                  text: 'Kobe Bryant',
+                  name: 'Kobe Bryant',
+                  visible: true,
+                  type: 'animation',
                   children: []
                 }
               ]
             },
             {
-              text: 'Astronauts',
+              name: 'Astronauts',
+              visible: true,
+              type: 'sprite',
               children: [
                 {
-                  text: 'Neil Armstrong',
+                  name: 'Neil Armstrong',
+                  visible: true,
+                  type: 'sprite',
                   children: []
                 },
                 {
-                  text: 'Yuri Gagarin',
+                  name: 'Yuri Gagarin',
+                  visible: true,
+                  type: 'animation',
                   children: []
                 }
               ]
@@ -38,47 +54,69 @@ export default Ember.Controller.extend({
           ]
         },
         {
-          text: 'Fruits',
+          name: 'Fruits',
+          visible: true,
+          type: 'sprite',
           children: [
             {
-              text: 'Banana',
+              name: 'Banana',
+              visible: true,
+              type: 'animation',
               children: []
             },
             {
-              text: 'Pineapple',
+              name: 'Pineapple',
+              visible: true,
+              type: 'animation',
               children: []
             },
             {
-              text: 'Orange',
+              name: 'Orange',
+              visible: true,
+              type: 'sprite',
               children: []
             }
           ]
         },
         {
-          text: 'Clothes',
+          name: 'Clothes',
+          visible: true,
+          type: 'sprite',
           children: [
             {
-              text: 'Women',
+              name: 'Women',
+              visible: true,
+              type: 'sprite',
               children: [
                 {
-                  text: 'Dresses',
+                  name: 'Dresses',
+                  visible: true,
+                  type: 'animation',
                   children: []
                 },
                 {
-                  text: 'Tops',
+                  name: 'Tops',
+                  visible: true,
+                  type: 'sprite',
                   children: []
                 }
               ]
             },
             {
-              text: 'Men',
+              name: 'Men',
+              visible: true,
+              type: 'animation',
               children: [
                 {
-                  text: 'Jeans',
+                  name: 'Jeans',
+                  visible: true,
+                  type: 'sprite',
                   children: []
                 },
                 {
-                  text: 'Shirts',
+                  name: 'Shirts',
+                  visible: true,
+                  type: 'animation',
                   children: []
                 }
               ]

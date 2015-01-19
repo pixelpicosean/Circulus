@@ -5,7 +5,15 @@
         {{fa-icon "plus-circle"}}
     {{/if}}
 </span>
-<a class="text" {{action 'select' node}}>{{node.text}}</a>
+<span {{action 'toggleVisibility'}}>
+    {{#if node.visible}}
+        {{fa-icon "eye"}}
+    {{else}}
+        {{fa-icon "eye-slash"}}
+    {{/if}}
+</span>
+<span>{{fa-icon type}}</span>
+<a class="text" {{action 'select' node}}>{{node.name}}</a>
 {{#if isExpanded}}
     {{ci-outliner-branch node=node}}
 {{/if}}
