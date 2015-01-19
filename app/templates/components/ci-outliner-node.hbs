@@ -1,8 +1,8 @@
 <span {{bind-attr class=":toggle-icon node.children.length::leaf"}} {{action 'toggle'}}>
     {{#if isExpanded}}
-        &#x25BC;
+        {{fa-icon "minus-circle"}}
     {{else}}
-        &#x25B6;
+        {{fa-icon "plus-circle"}}
     {{/if}}
 </span>
 <a class="text" {{action 'select' node}}>{{node.text}}</a>
