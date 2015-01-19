@@ -5,13 +5,14 @@ export default Ember.Component.extend({
     classNames: ['tree-node'],
 
     isExpanded: false,
+    selected: null,
 
     actions: {
         toggle: function() {
             this.toggleProperty('isExpanded');
         },
-        didClick: function() {
-            alert('You clicked: ' + this.get('node.text'));
+        select: function(obj) {
+            this.set('selected', obj);
         }
     }
 });

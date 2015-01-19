@@ -5,7 +5,7 @@
         &#x25B6;
     {{/if}}
 </span>
-<a class="text" {{action 'didClick'}}>{{node.text}}</a>
+<a class="text" {{action 'select' node}}>{{node.text}}</a>
 {{#if isExpanded}}
     {{ci-tree-branch node=node}}
 {{/if}}
