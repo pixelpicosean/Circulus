@@ -9,5 +9,6 @@ export default Ember.Component.extend({
      * Delegate that handles actions
      * @type {Controller|Route}
      */
-    delegate: null
+    delegate: null,
+    classNames: ['outliner']
 });
