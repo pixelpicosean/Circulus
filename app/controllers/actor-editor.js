@@ -1,13 +1,15 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-    selected: null,
-    actions: {
-        toggleVisibility: function(node, currVisible) {
-            console.log('%s "%s"', (currVisible ? 'hide' : 'show'), node.name);
-            Ember.set(node, 'visible', !currVisible);
-        }
-    },
+    /**
+     * Display outliner or not
+     * @type {Boolean}
+     */
+    showOutliner: true,
+
+    /**
+     * Actor model
+     */
     treeRoot: function() {
         return {
             name: 'Root',
@@ -131,5 +133,23 @@ export default Ember.Controller.extend({
                 }
             ]
         };
-    }.property()
+    }.property(),
+
+    actions: {
+        toggleVisibility: function(node, currVisible) {
+            console.log('%s "%s"', (currVisible ? 'hide' : 'show'), node.name);
+            Ember.set(node, 'visible', !currVisible);
+        }
+    },
+
+    init: function() {
+        this._super();
+
+        // Keyboard shortcuts
+        Mousetrap.bind('o', this.toggleOutliner.bind(this));
+    },
+
+    toggleOutliner: function() {
+        this.toggleProperty('showOutliner');
+    }
 });
