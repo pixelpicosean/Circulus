@@ -2,6 +2,12 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   selected: null,
+  actions: {
+    toggleVisibility: function(node, currVisible) {
+      console.log('%s "%s"', (currVisible ? 'hide' : 'show'), node.name);
+      Ember.set(node, 'visible', !currVisible);
+    }
+  },
   treeRoot: function() {
     return {
       name: 'Root',

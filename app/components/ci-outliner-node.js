@@ -10,5 +10,11 @@ export default CiTreeNode.extend({
             default:
                 return 'question';
         }
-    }.property()
+    }.property(),
+
+    actions: {
+        toggleVisibility: function(node, currVisible) {
+            this.get('delegate').send('toggleVisibility', node, currVisible);
+        }
+    }
 });

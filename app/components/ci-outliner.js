@@ -6,7 +6,8 @@ export default Ember.Component.extend({
      */
     root: null,
     /**
-     * Selected object node
+     * Delegate that handles actions
+     * @type {Controller|Route}
      */
-    selected: null
+    delegate: null
 });
