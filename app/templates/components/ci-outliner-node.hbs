@@ -5,7 +5,7 @@
         {{fa-icon "plus-circle"}}
     {{/if}}
 </span>
-<span {{action 'toggleVisibility' node node.visible}}>
+<span class="visible-icon" {{action 'toggleVisibility' node node.visible}}>
     {{#if node.visible}}
         {{fa-icon "eye"}}
     {{else}}
