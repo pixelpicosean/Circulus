@@ -8,7 +8,6 @@ var Router = Ember.Router.extend({
 Router.map(function() {
   this.route("sprite-editor");
   this.route("actor-editor");
-  this.route("dev");
 });
 
 export default Router;
