@@ -5,10 +5,8 @@ export default CiTreeNode.extend({
         switch (this.get('node.type')) {
             case 'sprite':
                 return 'image';
-                break;
             case 'animation':
                 return 'film';
-                break;
             default:
                 return 'question';
         }
