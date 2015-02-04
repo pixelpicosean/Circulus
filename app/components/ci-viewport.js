@@ -2,9 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
     tagName: 'canvas',
-    width: 100,
-    height: 100,
-    attributeBindings: ['width', 'height'],
+    width: 320,
+    height: 240,
 
     renderer: null,
     stage: null,
