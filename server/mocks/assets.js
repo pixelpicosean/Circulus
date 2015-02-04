@@ -9,11 +9,19 @@ module.exports = function(app) {
     return (/\.(gif|jpg|jpeg|tiff|png)$/i).test(filename);
   }
 
+  var uid = 0;
+  function formatData(asset) {
+    return {
+      id: (uid++),
+      path: '/assets/' + asset
+    };
+  }
+
   assetsRouter.get('/', function(req, res) {
     fs.readdir(ASSETS_PATH, function(err, files) {
       if (err) throw err;
 
-      var assets = files.filter(isImageFile);
+      var assets = files.filter(isImageFile).map(formatData);
 
       res.send({
         'assets': assets
