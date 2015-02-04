@@ -18,5 +18,6 @@ var app = new EmberApp();
 // along with the exports of each module as its value.
 
 app.import('bower_components/mousetrap/mousetrap.js');
+app.import('bower_components/pixi/bin/pixi.dev.js');
 
 module.exports = app.toTree();
