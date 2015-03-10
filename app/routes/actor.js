@@ -30,6 +30,6 @@ export default Ember.Route.extend({
     });
     parent.get('children').pushObject(child);
 
-    return this.store.all('actor');
+    return this.store.find('actor', 1);
   }
 });

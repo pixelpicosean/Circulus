@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -8,5 +9,8 @@ export default DS.Model.extend({
   rotation: DS.attr('number', { defaultValue: 0 }),
   size: DS.attr('vector', { defaultValue: { x: 1, y: 1 } }),
   position: DS.attr('vector', { defaultValue: { x: 0, y: 0 } }),
-  name: DS.attr('string', { defaultValue: '' })
+  name: DS.attr('string', { defaultValue: '' }),
+
+  // For tree component display
+  title: Ember.computed.alias('name')
 });
