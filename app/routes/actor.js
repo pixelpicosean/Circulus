@@ -2,17 +2,19 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   model: function() {
-    this.store.push('actor', {
+    var parent, child;
+    parent = this.store.push('actor', {
       id: 1,
       name: 'World'
     });
-    this.store.push('sprite', {
+    child = this.store.push('sprite', {
       id: 2,
       name: 'Mario',
       image: 'mario@2x.png',
       alpha: 0.6
     });
-    this.store.push('tiling-sprite', {
+    parent.get('children').pushObject(child);
+    child = this.store.push('tiling-sprite', {
       id: 3,
       name: 'ground',
       image: 'background.png',
@@ -21,10 +23,12 @@ export default Ember.Route.extend({
         x: 10, y: 0
       }
     });
-    this.store.push('animation', {
+    parent.get('children').pushObject(child);
+    child = this.store.push('animation', {
       id: 4,
       spritesheet: 'coin.png'
     });
+    parent.get('children').pushObject(child);
 
     return this.store.all('actor');
   }
