@@ -21,6 +21,10 @@ export default Ember.Route.extend({
         x: 10, y: 0
       }
     });
+    this.store.push('animation', {
+      id: 4,
+      spritesheet: 'coin.png'
+    });
 
     return this.store.all('actor');
   }
