@@ -16,7 +16,7 @@ export default Ember.Route.extend({
     parent.get('children').pushObject(child);
     child = this.store.push('tiling-sprite', {
       id: 3,
-      name: 'ground',
+      name: 'Ground',
       image: 'background.png',
       height: 32,
       speed: {
@@ -26,7 +26,8 @@ export default Ember.Route.extend({
     parent.get('children').pushObject(child);
     child = this.store.push('animation', {
       id: 4,
-      spritesheet: 'coin.png'
+      spritesheet: 'coin.png',
+      name: 'Coin'
     });
     parent.get('children').pushObject(child);
 
