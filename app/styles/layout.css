@@ -1,0 +1,15 @@
+/* Side panel */
+.side-panel {
+  width: 200px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.side-panel.left {
+  left: 0;
+}
+
+.side-panel.right {
+  right: 0;
+}
