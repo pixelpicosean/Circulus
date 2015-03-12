@@ -12,5 +12,6 @@ export default DS.Model.extend({
   name: DS.attr('string', { defaultValue: '' }),
 
   // For tree component display
-  title: Ember.computed.alias('name')
+  title: Ember.computed.alias('name'),
+  nodeType: 'actor'
 });
