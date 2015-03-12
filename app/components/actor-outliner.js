@@ -21,11 +21,10 @@ export default Ember.Component.extend({
 
   actions: {
     eye: function(actionView) {
-      console.log('Toggle visibility of %s', actionView.get('model.title'));
       this.get('delegate').send('eye', actionView.get('model'));
     },
     delete: function(actionView) {
-      console.log('Delete %s', actionView.get('model.title'));
+      this.get('delegate').send('delete', actionView.get('model'));
     }
   }
 });
