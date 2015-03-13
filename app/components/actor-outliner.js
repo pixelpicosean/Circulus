@@ -11,6 +11,12 @@ export default Ember.Component.extend({
   delegate: null,
 
   /**
+   * The current selected actor
+   * @type {Actor}
+   */
+  selected: null,
+
+  /**
    * Hover action definition
    * @type {Array}
    */
@@ -21,10 +27,14 @@ export default Ember.Component.extend({
 
   actions: {
     eye: function(actionView) {
-      this.get('delegate').send('eye', actionView.get('model'));
+      this.get('delegate').send('toggleActorVisibility', actionView.get('model'));
     },
     delete: function(actionView) {
-      this.get('delegate').send('delete', actionView.get('model'));
+      this.get('delegate').send('deleteActor', actionView.get('model'));
     }
-  }
+  },
+
+  selectedChanged: function() {
+    this.get('delegate').send('selectActor', this.get('selected'));
+  }.observes('selected')
 });
