@@ -29,4 +29,7 @@ app.import("bower_components/materialize/dist/font/material-design-icons/Materia
 
 app.import("bower_components/materialize/dist/js/materialize.js");
 
+// Pixi.js as Renderer
+app.import("bower_components/pixi.js/bin/pixi.dev.js");
+
 module.exports = app.toTree();

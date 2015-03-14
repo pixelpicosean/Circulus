@@ -13,6 +13,7 @@
     "ember-qunit-notifications": "0.0.7",
     "qunit": "~1.17.1",
     "font-awesome": "~4.3.0",
-    "materialize": "~0.95.3"
+    "materialize": "~0.95.3",
+    "pixi.js": "~2.2.7"
   }
 }
