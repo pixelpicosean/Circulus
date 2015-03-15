@@ -10,7 +10,10 @@ export default Ember.Route.extend({
     child = this.store.push('sprite', {
       id: 2,
       name: 'Mario',
-      image: 'mario@2x.png',
+      image: 'player1.png',
+      position: {
+        x: 300, y: 300
+      },
       alpha: 0.6
     });
     parent.get('children').pushObject(child);
