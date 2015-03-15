@@ -7,11 +7,11 @@ export default DS.Model.extend({
 
   anchor: DS.attr('vector', { defaultValue: { x: 0, y: 0 } }),
   rotation: DS.attr('number', { defaultValue: 0 }),
-  size: DS.attr('vector', { defaultValue: { x: 1, y: 1 } }),
+  size: DS.attr('vector'),
   position: DS.attr('vector', { defaultValue: { x: 0, y: 0 } }),
   name: DS.attr('string', { defaultValue: '' }),
 
   // For tree component display
   title: Ember.computed.alias('name'),
-  nodeType: 'actor'
+  nodeType: DS.attr('string', { defaultValue: 'actor' })
 });
