@@ -1,8 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.ObjectController.extend({
+  selected: null,
   actions: {
     selectActor: function(actor) {
+      this.set('selected', actor);
       console.log('Actor %s selected', actor.get('title'));
     },
     toggleActorVisibility: function(actor) {

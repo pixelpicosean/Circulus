@@ -2,7 +2,8 @@
 @import 'actor-inspector.css';
 
 .list-header {
-    margin: 0 0 4px 0;
+  margin: 0;
+  height: 1.4em;
 }
 
 /* Add REAL z-depth to z order classes */
@@ -20,6 +21,21 @@
 }
 .z-depth-5 {
   z-index: 5;
+}
+
+.collection.with-header > .collection-header {
+  padding: 1em 10px;
+}
+.collection.with-header > .collection-item {
+  padding: 10px 0 0 1em;
+}
+.collection-item input {
+  height: 1rem;
+}
+
+/* Theme */
+.collection.with-header > .collection-header {
+  /*background-color: */
 }
 
 /* Select */
