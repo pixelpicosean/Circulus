@@ -1,9 +1,13 @@
-<aside class="side-panel white z-depth-2">
+<aside class="side-panel left white z-depth-2">
   {{actor-outliner root=model delegate=controller}}
 </aside>
 
 <section class="z-depth-1">
   {{pixi-viewport actor=model}}
 </section>
+
+<aside class="side-panel right white z-depth-2">
+  {{actor-inspector delegate=controller}}
+</aside>
 
 {{outlet}}
