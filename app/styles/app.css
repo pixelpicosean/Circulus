@@ -33,6 +33,14 @@
   height: 1rem;
 }
 
+.scroll-y {
+  position: absolute;
+  top: 3.2rem;
+  bottom: 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
 /* Theme */
 .collection.with-header > .collection-header {
   /*background-color: */
