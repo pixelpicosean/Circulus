@@ -7,44 +7,144 @@ export default Ember.Route.extend({
       id: 1,
       name: 'World'
     });
-    child = this.store.push('sprite', {
-      id: 2,
-      name: 'LogoFlying',
-      image: 'logo1.png',
-      position: {
-        x: 100, y: 40
-      },
-      alpha: 0.6
-    });
-    parent.get('children').pushObject(child);
-    child = this.store.push('sprite', {
-      id: 3,
-      name: 'LogoDog',
-      image: 'logo2.png',
-      position: {
-        x: 200, y: 180
-      },
-      alpha: 0.6
-    });
-    parent.get('children').pushObject(child);
+
+    // Add parallals
     child = this.store.push('tiling-sprite', {
-      id: 4,
+      id: 2,
       name: 'Parallel1',
       image: 'parallax1.png',
-      size: {
-        x: 1280,
-        y: 376
-      },
+      width: 768,
+      height: 376,
       speed: {
-        x: 10, y: 0
+        x: -50, y: 0
       },
       position: {
         x: 0, y: 400
       }
     });
     parent.get('children').pushObject(child);
-    child = this.store.push('animation', {
+    child = this.store.push('tiling-sprite', {
+      id: 3,
+      name: 'Parallel2',
+      image: 'parallax2.png',
+      width: 768,
+      height: 364,
+      speed: {
+        x: -100, y: 0
+      },
+      position: {
+        x: 0, y: 550
+      }
+    });
+    parent.get('children').pushObject(child);
+    child = this.store.push('tiling-sprite', {
+      id: 4,
+      name: 'Parallel3',
+      image: 'parallax3.png',
+      width: 768,
+      height: 180,
+      speed: {
+        x: -200, y: 0
+      },
+      position: {
+        x: 0, y: 650
+      }
+    });
+    parent.get('children').pushObject(child);
+
+    // Add clouds
+    child = this.store.push('sprite', {
       id: 5,
+      name: 'cloud1',
+      image: 'cloud1.png',
+      position: {
+        x: 100, y: 100
+      }
+    });
+    parent.get('children').pushObject(child);
+    child = this.store.push('sprite', {
+      id: 6,
+      name: 'cloud2',
+      image: 'cloud2.png',
+      position: {
+        x: 300, y: 50
+      }
+    });
+    parent.get('children').pushObject(child);
+
+    // Add logo
+    child = this.store.push('sprite', {
+      id: 7,
+      name: 'LogoFlying',
+      image: 'logo1.png',
+      position: {
+        x: 100, y: 40
+      }
+    });
+    parent.get('children').pushObject(child);
+    child = this.store.push('sprite', {
+      id: 8,
+      name: 'LogoDog',
+      image: 'logo2.png',
+      position: {
+        x: 200, y: 180
+      }
+    });
+    parent.get('children').pushObject(child);
+
+    // Add clouds
+    child = this.store.push('sprite', {
+      id: 9,
+      name: 'cloud3',
+      image: 'cloud3.png',
+      position: {
+        x: 650, y: 100
+      }
+    });
+    parent.get('children').pushObject(child);
+    child = this.store.push('sprite', {
+      id: 10,
+      name: 'cloud4',
+      image: 'cloud4.png',
+      position: {
+        x: 700, y: 200
+      }
+    });
+    parent.get('children').pushObject(child);
+
+    // Add foreground
+    child = this.store.push('tiling-sprite', {
+      id: 11,
+      name: 'bushes',
+      image: 'bushes.png',
+      width: 768,
+      height: 224,
+      speed: {
+        x: -250, y: 0
+      },
+      position: {
+        x: 0, y: 700
+      }
+    });
+    parent.get('children').pushObject(child);
+    child = this.store.push('tiling-sprite', {
+      id: 12,
+      name: 'ground',
+      image: 'ground.png',
+      width: 768,
+      height: 272,
+      speed: {
+        x: -300, y: 0
+      },
+      position: {
+        x: 0, y: 800
+      }
+    });
+    parent.get('children').pushObject(child);
+
+    // Add player
+    child = this.store.push('animation', {
+      id: 13,
       name: 'Player',
       frames: ['player1.png', 'player2.png'],
       speed: 0.6,
@@ -53,7 +153,7 @@ export default Ember.Route.extend({
         x: 0.5, y: 0.5
       },
       position: {
-        x: 20, y: 200
+        x: 100, y: 500
       }
     });
     parent.get('children').pushObject(child);

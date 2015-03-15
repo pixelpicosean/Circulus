@@ -6,5 +6,8 @@ export default Actor.extend({
   flipX: DS.attr('boolean', { defaultValue: false }),
   flipY: DS.attr('boolean', { defaultValue: false }),
   alpha: DS.attr('number', { defaultValue: 1 }),
+
+  anchor: DS.attr('vector', { defaultValue: { x: 0, y: 0 } }),
+
   nodeType: 'sprite'
 });

@@ -52,6 +52,7 @@ export default Ember.Component.extend({
     ];
     var loader = new PIXI.AssetLoader(assetsToLoad);
     loader.onComplete = function() {
+      this.get('stage').setBackgroundColor(0xb2dcef);
       this.createInstance(actor);
     }.bind(this);
     loader.load();
@@ -79,13 +80,18 @@ export default Ember.Component.extend({
   },
   createActorInstance: function(actor, parent) {
     var inst = new PIXI.DisplayObjectContainer();
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.width = actor.get('size.x');
+    inst.height = actor.get('size.y');
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
     inst.model = actor;
 
     parent = parent || this.get('root');
     parent.addChild(inst);
 
-    // Create instances for children
+    // Create instances for children (Actor ONLY)
     var self = this;
     actor.get('children').forEach(function(child) {
       self.createInstance(child, inst);
@@ -94,7 +100,14 @@ export default Ember.Component.extend({
   createSpriteInstance: function(actor, parent) {
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.Sprite(tex);
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.scale.set(actor.get('scale.x'), actor.get('scale.y'));
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    // Sprite attributes
+    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
+
     inst.model = actor;
 
     parent = parent || this.get('root');
@@ -110,9 +123,16 @@ export default Ember.Component.extend({
         return PIXI.Texture.fromImage(frame);
       }));
     }
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.scale.set(actor.get('scale.x'), actor.get('scale.y'));
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    // Animation attributes
+    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
     inst.animationSpeed = actor.get('speed');
     inst.loop = actor.get('loop');
+
     inst.model = actor;
 
     parent = parent || this.get('root');
@@ -121,7 +141,15 @@ export default Ember.Component.extend({
   createTilingSpriteInstance: function(actor, parent) {
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.TilingSprite(tex, actor.get('size.x'), actor.get('size.y'));
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.width = actor.get('width');
+    inst.height = actor.get('height');
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    // TilingSprite attributes
+    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
+
     inst.model = actor;
 
     parent = parent || this.get('root');

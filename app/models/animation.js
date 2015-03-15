@@ -7,9 +7,11 @@ export default Actor.extend({
   frameWidth: DS.attr('number', { defaultValue: 16 }),
   frameHeight: DS.attr('number', { defaultValue: 16 }),
 
+  frames: DS.attr('array'),
   speed: DS.attr('number', { defaultValue: 1 }),
   loop: DS.attr('boolean', { defaultValue: true }),
-  frames: DS.attr('array'),
+
+  anchor: DS.attr('vector', { defaultValue: { x: 0, y: 0 } }),
 
   nodeType: 'animation'
 });
