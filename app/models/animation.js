@@ -5,5 +5,6 @@ export default Actor.extend({
   spritesheet: DS.attr('string', { defaultValue: '' }),
   speed: DS.attr('number', { defaultValue: 1 }),
   loop: DS.attr('boolean', { defaultValue: true }),
-  nodeType: DS.attr('string', { defaultValue: 'animation' })
+  frames: DS.attr('array'),
+  nodeType: 'animation'
 });

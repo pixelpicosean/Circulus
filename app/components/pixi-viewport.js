@@ -78,7 +78,6 @@ export default Ember.Component.extend({
     }
   },
   createActorInstance: function(actor, parent) {
-    console.log('Create actor: %s', actor.get('name'));
     var inst = new PIXI.DisplayObjectContainer();
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
     inst.model = actor;
@@ -93,7 +92,6 @@ export default Ember.Component.extend({
     });
   },
   createSpriteInstance: function(actor, parent) {
-    console.log('Create sprite: %s', actor.get('name'));
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.Sprite(tex);
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
@@ -103,7 +101,6 @@ export default Ember.Component.extend({
     parent.addChild(inst);
   },
   createAnimationInstance: function(actor, parent) {
-    console.log('Create animation: %s', actor.get('name'));
     var inst = new PIXI.DisplayObjectContainer();
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
     inst.model = actor;
@@ -112,7 +109,6 @@ export default Ember.Component.extend({
     parent.addChild(inst);
   },
   createTilingSpriteInstance: function(actor, parent) {
-    console.log('Create tiling-sprite: %s', actor.get('name'));
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.TilingSprite(tex, actor.get('size.x'), actor.get('size.y'));
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
