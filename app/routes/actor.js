@@ -9,16 +9,26 @@ export default Ember.Route.extend({
     });
     child = this.store.push('sprite', {
       id: 2,
-      name: 'Mario',
-      image: 'player1.png',
+      name: 'LogoFlying',
+      image: 'logo1.png',
       position: {
-        x: 300, y: 300
+        x: 100, y: 40
+      },
+      alpha: 0.6
+    });
+    parent.get('children').pushObject(child);
+    child = this.store.push('sprite', {
+      id: 3,
+      name: 'LogoDog',
+      image: 'logo2.png',
+      position: {
+        x: 200, y: 180
       },
       alpha: 0.6
     });
     parent.get('children').pushObject(child);
     child = this.store.push('tiling-sprite', {
-      id: 3,
+      id: 4,
       name: 'Parallel1',
       image: 'parallax1.png',
       size: {
@@ -34,11 +44,17 @@ export default Ember.Route.extend({
     });
     parent.get('children').pushObject(child);
     child = this.store.push('animation', {
-      id: 4,
+      id: 5,
       name: 'Player',
-      spritesheet: 'player1.png',
-      speed: 0.2,
-      loop: true
+      frames: ['player1.png', 'player2.png'],
+      speed: 0.6,
+      loop: true,
+      anchor: {
+        x: 0.5, y: 0.5
+      },
+      position: {
+        x: 20, y: 200
+      }
     });
     parent.get('children').pushObject(child);
 

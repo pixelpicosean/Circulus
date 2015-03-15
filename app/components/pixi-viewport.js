@@ -101,8 +101,18 @@ export default Ember.Component.extend({
     parent.addChild(inst);
   },
   createAnimationInstance: function(actor, parent) {
-    var inst = new PIXI.DisplayObjectContainer();
+    var inst;
+    if (actor.get('useSpritesheet')) {
+      // TODO: support spritesheet animation
+    }
+    else {
+      inst = new PIXI.MovieClip(actor.get('frames').map(function(frame) {
+        return PIXI.Texture.fromImage(frame);
+      }));
+    }
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    inst.animationSpeed = actor.get('speed');
+    inst.loop = actor.get('loop');
     inst.model = actor;
 
     parent = parent || this.get('root');
