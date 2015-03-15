@@ -9,5 +9,6 @@ export default Actor.extend({
   width: DS.attr('number', { defaultValue: 32 }),
   height: DS.attr('number', { defaultValue: 32 }),
 
-  nodeType: 'tiling-sprite'
+  nodeType: 'tiling-sprite',
+  isTilingSprite: true
 });

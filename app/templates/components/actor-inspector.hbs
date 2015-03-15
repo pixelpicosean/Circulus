@@ -51,4 +51,85 @@
     <span class="col s7">{{input type="text" value=model.name}}</span>
   </li>
 
+  {{#if model.isSprite}}
+    {{!-- Image --}}
+    <li class="collection-header cyan white-text">IMAGE</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">image: </span>
+      <span class="col s7">{{input type="text" value=model.image}}</span>
+    </li>
+
+    {{!-- Flip --}}
+    <li class="collection-header cyan white-text">FLIP</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">x: </span>
+      <span class="col s7">{{input type="checkbox" checked=model.flipX}}</span>
+    </li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">y: </span>
+      <span class="col s7">{{input type="checkbox" checked=model.flipY}}</span>
+    </li>
+
+    {{!-- Anchor --}}
+    <li class="collection-header cyan white-text">ANCHOR</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">x: </span>
+      <span class="col s7">{{input type="number" value=model.anchor.x}}</span>
+    </li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">y: </span>
+      <span class="col s7">{{input type="number" value=model.anchor.y}}</span>
+    </li>
+  {{/if}}
+
+  {{#if model.isAnimation}}
+    {{!-- Anchor --}}
+    <li class="collection-header cyan white-text">ANCHOR</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">x: </span>
+      <span class="col s7">{{input type="number" value=model.anchor.x}}</span>
+    </li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">y: </span>
+      <span class="col s7">{{input type="number" value=model.anchor.y}}</span>
+    </li>
+
+    {{!-- Speed --}}
+    <li class="collection-header cyan white-text">SPEED</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">speed: </span>
+      <span class="col s7">{{input type="number" value=model.speed}}</span>
+    </li>
+
+    {{!-- Loop --}}
+    <li class="collection-header cyan white-text">LOOP</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">loop: </span>
+      <span class="col s7">{{input type="checkbox" checked=model.loop}}</span>
+    </li>
+  {{/if}}
+
+  {{#if model.isTilingSprite}}
+    {{!-- Anchor --}}
+    <li class="collection-header cyan white-text">ANCHOR</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">x: </span>
+      <span class="col s7">{{input type="number" value=model.anchor.x}}</span>
+    </li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">y: </span>
+      <span class="col s7">{{input type="number" value=model.anchor.y}}</span>
+    </li>
+    {{!-- Size --}}
+    <li class="collection-header cyan white-text">SIZE</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">width: </span>
+      <span class="col s7">{{input type="number" value=model.width}}</span>
+    </li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">height: </span>
+      <span class="col s7">{{input type="number" value=model.height}}</span>
+    </li>
+  {{/if}}
+
 </ul>

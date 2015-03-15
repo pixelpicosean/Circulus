@@ -13,5 +13,6 @@ export default Actor.extend({
 
   anchor: DS.attr('vector', { defaultValue: { x: 0, y: 0 } }),
 
-  nodeType: 'animation'
+  nodeType: 'animation',
+  isAnimation: true
 });
