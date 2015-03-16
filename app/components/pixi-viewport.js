@@ -98,7 +98,10 @@ export default Ember.Component.extend({
     };
 
     // Update instance properties based on its model
-    this.syncActorInst(actor, inst);
+    // ONLY sync non-root actors
+    if (this.get('actor.id') !== actor.get('id')) {
+      this.syncActorInst(actor, inst);
+    }
 
     // Add to parent
     parent = parent || this.get('root');
@@ -176,6 +179,8 @@ export default Ember.Component.extend({
   },
 
   syncInstOf: function(actor) {
+    if (this.get('actor.id') === actor.get('id')) { return; }
+
     var pair = this.get('instModelHash')[actor.get('id')];
     if (pair) {
       switch (actor.get('nodeType')) {
