@@ -1,8 +1,13 @@
 <h4 class="list-header center-align white-text blue noselect">INSPECTOR</h4>
 <ul class="collection with-header scroll-y white">
 
-  {{!-- Position --}}
-  <li class="collection-header cyan white-text">POSITION</li>
+  <li class="collection-header cyan white-text">ACTOR</li>
+  <li class="collection-item row">
+    <span class="col s5 right-align">name: </span>
+    <span class="col s7">{{input type="text" value=model.name}}</span>
+  </li>
+
+  <li class="collection-header cyan white-text">TRANSFORM</li>
   <li class="collection-item row">
     <span class="col s5 right-align">x: </span>
     <span class="col s7">{{input type="number" value=model.position.x}}</span>
@@ -12,116 +17,102 @@
     <span class="col s7">{{input type="number" value=model.position.y}}</span>
   </li>
 
-  {{!-- Alpha --}}
-  <li class="collection-header cyan white-text">ALPHA</li>
-  <li class="collection-item row">
-    <span class="col s5 right-align">alpha: </span>
-    <span class="col s7">{{input type="number" min="0" max="1" step="0.1" value=model.alpha}}</span>
-  </li>
-
-  {{!-- Rotation --}}
-  <li class="collection-header cyan white-text">ROTATION</li>
   <li class="collection-item row">
     <span class="col s5 right-align">rotation: </span>
     <span class="col s7">{{input type="number" value=model.rotation}}</span>
   </li>
 
-  {{!-- Alpha --}}
-  <li class="collection-header cyan white-text">ALPHA</li>
+  <li class="collection-item row">
+    <span class="col s5 right-align">scale.x: </span>
+    <span class="col s7">{{input type="number" step="0.1" value=model.scale.x}}</span>
+  </li>
+  <li class="collection-item row">
+    <span class="col s5 right-align">scale.y: </span>
+    <span class="col s7">{{input type="number" step="0.1" value=model.scale.y}}</span>
+  </li>
+
+  <li class="collection-header cyan white-text">VISUAL</li>
   <li class="collection-item row">
     <span class="col s5 right-align">alpha: </span>
     <span class="col s7">{{input type="number" min="0" max="1" step="0.1" value=model.alpha}}</span>
   </li>
 
-  {{!-- Scale --}}
-  <li class="collection-header cyan white-text">SCALE</li>
-  <li class="collection-item row">
-    <span class="col s5 right-align">x: </span>
-    <span class="col s7">{{input type="number" step="0.1" value=model.scale.x}}</span>
-  </li>
-  <li class="collection-item row">
-    <span class="col s5 right-align">y: </span>
-    <span class="col s7">{{input type="number" step="0.1" value=model.scale.y}}</span>
-  </li>
-
-  {{!-- Name --}}
-  <li class="collection-header cyan white-text">NAME</li>
-  <li class="collection-item row">
-    <span class="col s5 right-align">name: </span>
-    <span class="col s7">{{input type="text" value=model.name}}</span>
-  </li>
-
-  {{#if model.isSprite}}
-    {{!-- Image --}}
-    <li class="collection-header cyan white-text">IMAGE</li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">image: </span>
-      <span class="col s7">{{input type="text" value=model.image}}</span>
-    </li>
-
-    {{!-- Flip --}}
-    <li class="collection-header cyan white-text">FLIP</li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">x: </span>
-      <span class="col s7">{{input type="checkbox" checked=model.flipX}}</span>
-    </li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">y: </span>
-      <span class="col s7">{{input type="checkbox" checked=model.flipY}}</span>
-    </li>
-
-    {{!-- Anchor --}}
-    <li class="collection-header cyan white-text">ANCHOR</li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">x: </span>
-      <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
-    </li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">y: </span>
-      <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
-    </li>
-  {{/if}}
-
   {{#if model.isAnimation}}
-    {{!-- Anchor --}}
-    <li class="collection-header cyan white-text">ANCHOR</li>
     <li class="collection-item row">
-      <span class="col s5 right-align">x: </span>
+      <span class="col s5 right-align">anchor.x: </span>
       <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
     </li>
     <li class="collection-item row">
-      <span class="col s5 right-align">y: </span>
+      <span class="col s5 right-align">anchor.y: </span>
       <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
     </li>
 
-    {{!-- Speed --}}
-    <li class="collection-header cyan white-text">SPEED</li>
+    <li class="collection-header cyan white-text">ANIMATION</li>
     <li class="collection-item row">
       <span class="col s5 right-align">speed: </span>
       <span class="col s7">{{input type="number" value=model.speed}}</span>
     </li>
 
-    {{!-- Loop --}}
-    <li class="collection-header cyan white-text">LOOP</li>
     <li class="collection-item row">
       <span class="col s5 right-align">loop: </span>
       <span class="col s7">{{input type="checkbox" checked=model.loop}}</span>
     </li>
+
+    <li class="collection-item row">
+      <span class="col s5 right-align">use sheet: </span>
+      <span class="col s7">{{input type="checkbox" checked=model.useSpritesheet}}</span>
+    </li>
+
+    {{#if model.useSpritesheet}}
+      <li class="collection-item row">
+        <span class="col s5 right-align">sheet image: </span>
+        <span class="col s7">{{input type="text" value=model.spritesheet}}</span>
+      </li>
+
+      <li class="collection-item row">
+        <span class="col s5 right-align">frame width: </span>
+        <span class="col s7">{{input type="number" min="1" step="1" value=model.frameWidth}}</span>
+      </li>
+      <li class="collection-item row">
+        <span class="col s5 right-align">frame height: </span>
+        <span class="col s7">{{input type="number" min="1" step="1" value=model.frameHeight}}</span>
+      </li>
+    {{else}}
+      <li class="collection-item row">
+        <span class="col s5 right-align">frames: </span>
+        <span class="col s7">{{input type="button" title="edit"}}</span>
+      </li>
+    {{/if}}
   {{/if}}
 
-  {{#if model.isTilingSprite}}
-    {{!-- Anchor --}}
-    <li class="collection-header cyan white-text">ANCHOR</li>
+  {{#if model.isSprite}}
     <li class="collection-item row">
-      <span class="col s5 right-align">x: </span>
+      <span class="col s5 right-align">anchor.x: </span>
       <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
     </li>
     <li class="collection-item row">
-      <span class="col s5 right-align">y: </span>
+      <span class="col s5 right-align">anchor.y: </span>
       <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
     </li>
-    {{!-- Size --}}
-    <li class="collection-header cyan white-text">SIZE</li>
+
+    <li class="collection-header cyan white-text">SPRITE</li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">image: </span>
+      <span class="col s7">{{input type="text" value=model.image}}</span>
+    </li>
+  {{/if}}
+
+  {{#if model.isTilingSprite}}
+    <li class="collection-item row">
+      <span class="col s5 right-align">anchor.x: </span>
+      <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
+    </li>
+    <li class="collection-item row">
+      <span class="col s5 right-align">anchor.y: </span>
+      <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
+    </li>
+
+    <li class="collection-header cyan white-text">TILING SPRITE</li>
     <li class="collection-item row">
       <span class="col s5 right-align">width: </span>
       <span class="col s7">{{input type="number" min="0" step="1" value=model.width}}</span>
