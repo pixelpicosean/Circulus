@@ -6,8 +6,21 @@ export default Ember.Component.extend({
   layout: layout,
   classNames: ['fullscreen'],
 
+  /**
+   * The actor which is current displayed
+   * @type {Actor}
+   */
   actor: null,
+  /**
+   * Current selected child of the actor
+   * @type {Actor}
+   */
   selected: null,
+  /**
+   * Whether current selected actor editable?
+   * @type {Boolean}
+   */
+  selectedEditable: false,
 
   renderer: null,
   stage: null,
@@ -179,7 +192,7 @@ export default Ember.Component.extend({
   },
 
   syncInstOf: function(actor) {
-    if (this.get('actor.id') === actor.get('id')) { return; }
+    if (!this.get('selectedEditable')) { return; }
 
     var pair = this.get('instModelHash')[actor.get('id')];
     if (pair) {
