@@ -7,10 +7,13 @@ export default Ember.Component.extend({
   classNames: ['fullscreen'],
 
   actor: null,
+  selected: null,
 
   renderer: null,
   stage: null,
   root: null,
+
+  instModelHash: {},
 
   willInsertElement: function() {
     // Setup Pixi
@@ -25,11 +28,16 @@ export default Ember.Component.extend({
     // Insert pixi canvas
     this.$().append(this.get('renderer.view'));
     // Start run loop
-    var self = this;
+    var self = this, selected;
     requestAnimationFrame(animate);
     function animate() {
-        self.get('renderer').render(self.get('stage'));
-        requestAnimationFrame(animate);
+      selected = self.get('selected');
+      if (selected) {
+        self.syncInstOf(selected);
+      }
+
+      self.get('renderer').render(self.get('stage'));
+      requestAnimationFrame(animate);
     }
 
     // Setup resizing service
@@ -86,7 +94,12 @@ export default Ember.Component.extend({
     inst.width = actor.get('size.x');
     inst.height = actor.get('size.y');
     inst.position.set(actor.get('position.x'), actor.get('position.y'));
-    inst.model = actor;
+
+    inst.id = actor.get('id');
+    this.instModelHash[actor.get('id')] = {
+      actor: actor,
+      inst: inst
+    };
 
     parent = parent || this.get('root');
     parent.addChild(inst);
@@ -108,7 +121,11 @@ export default Ember.Component.extend({
     // Sprite attributes
     inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
 
-    inst.model = actor;
+    inst.id = actor.get('id');
+    this.instModelHash[actor.get('id')] = {
+      actor: actor,
+      inst: inst
+    };
 
     parent = parent || this.get('root');
     parent.addChild(inst);
@@ -133,7 +150,11 @@ export default Ember.Component.extend({
     inst.animationSpeed = actor.get('speed');
     inst.loop = actor.get('loop');
 
-    inst.model = actor;
+    inst.id = actor.get('id');
+    this.instModelHash[actor.get('id')] = {
+      actor: actor,
+      inst: inst
+    };
 
     parent = parent || this.get('root');
     parent.addChild(inst);
@@ -150,9 +171,71 @@ export default Ember.Component.extend({
     // TilingSprite attributes
     inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
 
-    inst.model = actor;
+    inst.id = actor.get('id');
+    this.instModelHash[actor.get('id')] = {
+      actor: actor,
+      inst: inst
+    };
 
     parent = parent || this.get('root');
     parent.addChild(inst);
+  },
+
+  syncInstOf: function(actor) {
+    var pair = this.get('instModelHash')[actor.get('id')];
+    if (pair) {
+      switch (actor.get('nodeType')) {
+        case 'actor':
+          this.syncActorInst(actor, pair.inst);
+          break;
+        case 'animation':
+          this.syncAnimationInst(actor, pair.inst);
+          break;
+        case 'sprite':
+          this.syncSpriteInst(actor, pair.inst);
+          break;
+        case 'tiling-sprite':
+          this.syncTilingSpriteInst(actor, pair.inst);
+          break;
+      }
+    }
+  },
+  syncActorInst: function(actor, inst) {
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.width = actor.get('size.x');
+    inst.height = actor.get('size.y');
+    inst.position.set(actor.get('position.x'), actor.get('position.y'));
+  },
+  syncAnimationInst: function(actor, inst) {
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.scale.set(actor.get('scale.x'), actor.get('scale.y'));
+    inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    // Animation attributes
+    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
+    inst.animationSpeed = actor.get('speed');
+    inst.loop = actor.get('loop');
+  },
+  syncSpriteInst: function(actor, inst) {
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.scale.set(actor.get('scale.x'), actor.get('scale.y'));
+    inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    // Sprite attributes
+    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
+  },
+  syncTilingSpriteInst: function(actor, inst) {
+    // Actor attributes
+    inst.alpha = actor.get('alpha');
+    inst.rotation = actor.get('rotation');
+    inst.width = actor.get('width');
+    inst.height = actor.get('height');
+    inst.position.set(actor.get('position.x'), actor.get('position.y'));
+    // TilingSprite attributes
+    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
   }
 });
