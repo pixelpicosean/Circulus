@@ -65,7 +65,7 @@
 
     {{#if model.useSpritesheet}}
       <li class="collection-item row">
-        <span class="col s5 right-align">sheet image: </span>
+        <span class="col s5 right-align">spritesheet: </span>
         <span class="col s7">{{input type="text" value=model.spritesheet}}</span>
       </li>
 
@@ -80,7 +80,7 @@
     {{else}}
       <li class="collection-item row">
         <span class="col s5 right-align">frames: </span>
-        <span class="col s7">{{input type="button" title="edit"}}</span>
+        <span class="col s7">{{input type="button" value="EDIT" class="btn"}}</span>
       </li>
     {{/if}}
   {{/if}}

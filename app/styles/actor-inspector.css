@@ -5,3 +5,20 @@
 .collection-item .col {
   padding: 0 0.25rem;
 }
+
+.collection-item input[type="number"],
+.collection-item input[type="text"] {
+  height: 1.2rem;
+}
+
+.collection-item input[type="checkbox"] {
+  height: 1rem;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+}
+
+.collection-item .btn {
+  width: 6rem;
+  height: 1.6rem;
+  line-height: 24px;
+}
