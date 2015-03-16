@@ -24,10 +24,10 @@
 }
 
 .collection.with-header > .collection-header {
-  padding: 1em 10px;
+  padding: 0.2em 0 0.2em 0.5em;
 }
 .collection.with-header > .collection-item {
-  padding: 10px 0 0 1em;
+  padding: 0.5em 0 0 0;
 }
 .collection-item input {
   height: 1rem;
@@ -39,11 +39,6 @@
   bottom: 0;
   overflow: hidden;
   overflow-y: auto;
-}
-
-/* Theme */
-.collection.with-header > .collection-header {
-  /*background-color: */
 }
 
 /* Select */
