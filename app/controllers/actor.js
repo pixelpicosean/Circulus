@@ -13,5 +13,9 @@ export default Ember.ObjectController.extend({
     deleteActor: function(actor) {
       console.log('Delete %s', actor.get('name'));
     }
-  }
+  },
+
+  selectedEditable: function() {
+    return this.get('selected.id') !== this.get('model.id');
+  }.property('selected')
 });
