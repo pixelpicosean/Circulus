@@ -87,20 +87,20 @@ export default Ember.Component.extend({
     }
   },
   createActorInstance: function(actor, parent) {
+    // Create actor instance
     var inst = new PIXI.DisplayObjectContainer();
-    // Actor attributes
-    inst.alpha = actor.get('alpha');
-    inst.rotation = actor.get('rotation');
-    inst.width = actor.get('size.x');
-    inst.height = actor.get('size.y');
-    inst.position.set(actor.get('position.x'), actor.get('position.y'));
 
+    // Save actor-instance pair to hash for later use
     inst.id = actor.get('id');
     this.instModelHash[actor.get('id')] = {
       actor: actor,
       inst: inst
     };
 
+    // Update instance properties based on its model
+    this.syncActorInst(actor, inst);
+
+    // Add to parent
     parent = parent || this.get('root');
     parent.addChild(inst);
 
@@ -110,27 +110,8 @@ export default Ember.Component.extend({
       self.createInstance(child, inst);
     });
   },
-  createSpriteInstance: function(actor, parent) {
-    var tex = PIXI.Texture.fromImage(actor.get('image'));
-    var inst = new PIXI.Sprite(tex);
-    // Actor attributes
-    inst.alpha = actor.get('alpha');
-    inst.rotation = actor.get('rotation');
-    inst.scale.set(actor.get('scale.x'), actor.get('scale.y'));
-    inst.position.set(actor.get('position.x'), actor.get('position.y'));
-    // Sprite attributes
-    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
-
-    inst.id = actor.get('id');
-    this.instModelHash[actor.get('id')] = {
-      actor: actor,
-      inst: inst
-    };
-
-    parent = parent || this.get('root');
-    parent.addChild(inst);
-  },
   createAnimationInstance: function(actor, parent) {
+    // Create animation instance
     var inst;
     if (actor.get('useSpritesheet')) {
       // TODO: support spritesheet animation
@@ -140,43 +121,56 @@ export default Ember.Component.extend({
         return PIXI.Texture.fromImage(frame);
       }));
     }
-    // Actor attributes
-    inst.alpha = actor.get('alpha');
-    inst.rotation = actor.get('rotation');
-    inst.scale.set(actor.get('scale.x'), actor.get('scale.y'));
-    inst.position.set(actor.get('position.x'), actor.get('position.y'));
-    // Animation attributes
-    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
-    inst.animationSpeed = actor.get('speed');
-    inst.loop = actor.get('loop');
 
+    // Save actor-instance pair to hash for later use
     inst.id = actor.get('id');
     this.instModelHash[actor.get('id')] = {
       actor: actor,
       inst: inst
     };
 
+    // Update instance properties based on its model
+    this.syncAnimationInst(actor, inst);
+
+    // Add to parent
+    parent = parent || this.get('root');
+    parent.addChild(inst);
+  },
+  createSpriteInstance: function(actor, parent) {
+    // Create sprite instance
+    var tex = PIXI.Texture.fromImage(actor.get('image'));
+    var inst = new PIXI.Sprite(tex);
+
+    // Save actor-instance pair to hash for later use
+    inst.id = actor.get('id');
+    this.instModelHash[actor.get('id')] = {
+      actor: actor,
+      inst: inst
+    };
+
+    // Update instance properties based on its model
+    this.syncSpriteInst(actor, inst);
+
+    // Add to parent
     parent = parent || this.get('root');
     parent.addChild(inst);
   },
   createTilingSpriteInstance: function(actor, parent) {
+    // Create tiling-sprite instance
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.TilingSprite(tex, actor.get('size.x'), actor.get('size.y'));
-    // Actor attributes
-    inst.alpha = actor.get('alpha');
-    inst.rotation = actor.get('rotation');
-    inst.width = actor.get('width');
-    inst.height = actor.get('height');
-    inst.position.set(actor.get('position.x'), actor.get('position.y'));
-    // TilingSprite attributes
-    inst.anchor.set(actor.get('anchor.x'), actor.get('anchor.y'));
 
+    // Save actor-instance pair to hash for later use
     inst.id = actor.get('id');
     this.instModelHash[actor.get('id')] = {
       actor: actor,
       inst: inst
     };
 
+    // Update instance properties based on its model
+    this.syncTilingSpriteInst(actor, inst);
+
+    // Add to parent
     parent = parent || this.get('root');
     parent.addChild(inst);
   },
