@@ -38,6 +38,18 @@ export default Ember.Component.extend({
   uiContainer: null,    // contains ui instances
   actorContainer: null, // contains actor instances
 
+  /**
+   * A graphics instance listening to clicking at nowhere,
+   * used to de-select current selected actor.
+   * This object is added to stage directly, so it will not
+   * be affected by view panning, scaling...
+   * @type {PIXI.Graphics}
+   */
+  emptyLayer: null,
+  /**
+   * Selection box around current selected actor
+   * @type {PIXI.Graphics}
+   */
   selectionRect: null,
 
   instModelHash: {},
@@ -46,9 +58,23 @@ export default Ember.Component.extend({
     // Setup Pixi
     this.set('renderer', new PIXI.CanvasRenderer());
     this.set('stage', new PIXI.Stage());
+
     this.set('root', new PIXI.DisplayObjectContainer());
+
     this.set('uiContainer', new PIXI.DisplayObjectContainer());
     this.set('actorContainer', new PIXI.DisplayObjectContainer());
+
+    // Add a layer to listen to "click nothing" event
+    var layer = new PIXI.Graphics(),
+      self = this;
+    layer.interactive = true;
+    layer.click = function() {
+      // Select nothing
+      self.set('selected', undefined);
+      self.removeSelectionRect();
+    };
+    this.get('stage').addChild(layer);
+    this.set('emptyLayer', layer);
 
     this.get('root').addChild(this.get('actorContainer'));
     this.get('root').addChild(this.get('uiContainer'));
@@ -116,14 +142,26 @@ export default Ember.Component.extend({
       pair.inst.parent.removeChild(pair.inst);
     }
   },
+  actorSelected: function() {
+    var pair = this.instModelHash[this.get('selected.id')];
+    if (pair) {
+      this.drawRectForActorInstance(pair.inst);
+    }
+  }.observes('selected'),
 
   resizeRenderer: function() {
+    // Resize renderer
     this.get('renderer').resize(this.$().width(), this.$().height());
+
+    // Resize empty layer
+    var layer = this.get('emptyLayer');
+    layer.beginFill(0xffffff, 0);
+    layer.drawRect(0, 0, this.$().width(), this.$().height());
+    layer.endFill();
   },
 
   actorClicked: function(actor, inst) {
     this.set('selected', actor);
-    this.drawRectForActorInstance(inst);
   },
   drawRectForActorInstance: function(inst) {
     var left = inst.position.x - inst.width * inst.anchor.x,
@@ -163,6 +201,12 @@ export default Ember.Component.extend({
     rect.beginFill(0x03a9f4, 1);
     rect.drawCircle(left, top + height, 6);
     rect.endFill();
+
+    // Show it
+    rect.visible = true;
+  },
+  removeSelectionRect: function() {
+    this.get('selectionRect').visible = false;
   },
 
   createInstance: function(actor, parent) {
