@@ -7,6 +7,9 @@ var app = new EmberApp();
 // LocalStorage Adapter
 app.import('bower_components/ember-localstorage-adapter/localstorage_adapter.js');
 
+// Mousetrap
+app.import('bower_components/mousetrap/mousetrap.js');
+
 // Font Awesome
 app.import('bower_components/font-awesome/css/font-awesome.css');
 

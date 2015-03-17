@@ -1,6 +1,14 @@
 import Ember from 'ember';
 import layout from '../templates/components/pixi-viewport';
 /* global PIXI */
+/* global Mousetrap */
+
+var MODES = {
+  NORMAL: 0,
+  TRANSLATE: 1,
+  ROTATE: 2,
+  SCALE: 3
+};
 
 export default Ember.Component.extend({
   layout: layout,
@@ -53,6 +61,7 @@ export default Ember.Component.extend({
   selectionRect: null,
 
   instModelHash: {},
+  currModifyMode: MODES.NORMAL,
 
   willInsertElement: function() {
     // Setup Pixi
@@ -69,9 +78,14 @@ export default Ember.Component.extend({
       self = this;
     layer.interactive = true;
     layer.click = function() {
-      // Select nothing
-      self.set('selected', undefined);
-      self.removeSelectionRect();
+      // Deselect in normal mode
+      if (self.get('currModifyMode') === MODES.NORMAL) {
+        self.set('selected', undefined);
+        self.removeSelectionRect();
+      }
+      else {
+        self.confirmModifyChanges();
+      }
     };
     this.get('stage').addChild(layer);
     this.set('emptyLayer', layer);
@@ -100,6 +114,34 @@ export default Ember.Component.extend({
     // Setup resizing service
     this.resizeNotificationService.on('windowResizedLowLatency', this, this.resizeRenderer);
     this.resizeRenderer();
+
+    // Setup shortcuts
+    Mousetrap.bind('command+d', function() {
+      // Reset and deselect
+      if (self.get('currModifyMode') !== MODES.NORMAL) {
+        self.resetModifyChanges();
+      }
+      self.set('selected', undefined);
+      self.removeSelectionRect();
+
+      // Prevents the default action
+      return false;
+    });
+    Mousetrap.bind('g', function() {
+      self.enterTranslateMode();
+    });
+    Mousetrap.bind('r', function() {
+      self.enterRotateMode();
+    });
+    Mousetrap.bind('s', function() {
+      self.enterScaleMode();
+    });
+    Mousetrap.bind('enter', function() {
+      self.confirmModifyChanges();
+    });
+    Mousetrap.bind('esc', function() {
+      self.resetModifyChanges();
+    });
 
     // Listen to actor events
     this.get('actorDeleteEventEmitter').on('deleteActor', this, this.actorDeleted);
@@ -130,6 +172,10 @@ export default Ember.Component.extend({
     loader.load();
   }.observes('actor').on('didInsertElement'),
   actorPropertyChanged: function(actor) {
+    if (!actor) {
+      return;
+    }
+
     var pair = this.instModelHash[actor.get('id')];
     if (pair) {
       this.syncInstOf(actor);
@@ -148,6 +194,64 @@ export default Ember.Component.extend({
       this.drawRectForActorInstance(pair.inst);
     }
   }.observes('selected'),
+  actorClicked: function(actor) {
+    if (this.get('currModifyMode') === MODES.NORMAL) {
+      this.set('selected', actor);
+    }
+    else {
+      this.confirmModifyChanges();
+    }
+  },
+
+  // Modifying Modes Begin
+  enterTranslateMode: function() {
+    if (!this.get('selected') || this.get('currModifyMode') === MODES.TRANSLATE) {
+      return;
+    }
+    // Reset if switch from other modifying modes
+    if (this.get('currModifyMode') !== MODES.NORMAL) {
+      this.resetModifyChanges();
+    }
+    this.set('currModifyMode', MODES.TRANSLATE);
+    console.log('enter TRANSLATE mode');
+  },
+  enterRotateMode: function() {
+    if (!this.get('selected') || this.get('currModifyMode') === MODES.ROTATE) {
+      return;
+    }
+    // Reset if switch from other modifying modes
+    if (this.get('currModifyMode') !== MODES.NORMAL) {
+      this.resetModifyChanges();
+    }
+    this.set('currModifyMode', MODES.ROTATE);
+    console.log('enter ROTATE mode');
+  },
+  enterScaleMode: function() {
+    if (!this.get('selected') || this.get('currModifyMode') === MODES.SCALE) {
+      return;
+    }
+    // Reset if switch from other modifying modes
+    if (this.get('currModifyMode') !== MODES.NORMAL) {
+      this.resetModifyChanges();
+    }
+    this.set('currModifyMode', MODES.SCALE);
+    console.log('enter SCALE mode');
+  },
+  confirmModifyChanges: function() {
+    if (!this.get('selected') || this.get('currModifyMode') === MODES.NORMAL) {
+      return;
+    }
+    this.set('currModifyMode', MODES.NORMAL);
+    console.log('confirm changes');
+  },
+  resetModifyChanges: function() {
+    if (!this.get('selected') || this.get('currModifyMode') === MODES.NORMAL) {
+      return;
+    }
+    this.set('currModifyMode', MODES.NORMAL);
+    console.log('reset changes');
+  },
+  // Modifying Modes End
 
   resizeRenderer: function() {
     // Resize renderer
@@ -160,9 +264,6 @@ export default Ember.Component.extend({
     layer.endFill();
   },
 
-  actorClicked: function(actor, inst) {
-    this.set('selected', actor);
-  },
   drawRectForActorInstance: function(inst) {
     var left = -inst.width * inst.anchor.x,
       top = -inst.height * inst.anchor.y,
@@ -271,7 +372,7 @@ export default Ember.Component.extend({
       inst.interactive = true;
       var self = this;
       inst.click = function() {
-        self.actorClicked(actor, inst);
+        self.actorClicked(actor);
       };
     }
 
