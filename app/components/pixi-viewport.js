@@ -63,6 +63,41 @@ export default Ember.Component.extend({
   instModelHash: {},
   currModifyMode: MODES.NORMAL,
 
+  /**
+   * Mouse position before enter modifying mode
+   * @type {Object}
+   */
+  mousePosBeforeModify: {
+    x: 0, y: 0
+  },
+  /**
+   * Current mouse position in browser window
+   * @type {Object}
+   */
+  currMousePos: {
+    x: 0, y: 0
+  },
+
+  /**
+   * Position of selected actor before enter modifying mode
+   * @type {Object}
+   */
+  actorPosBeforeModify: {
+    x: 0, y: 0
+  },
+  /**
+   * Rotation of selected actor before enter modifying mode
+   * @type {Number}
+   */
+  actorRotationBeforeModify: 0,
+  /**
+   * Scale of selected actor before enter modifying mode
+   * @type {Object}
+   */
+  actorScaleBeforeModify: {
+    x: 0, y: 0
+  },
+
   willInsertElement: function() {
     // Setup Pixi
     this.set('renderer', new PIXI.CanvasRenderer());
@@ -151,8 +186,30 @@ export default Ember.Component.extend({
     this.get('actorDeleteEventEmitter').off('deleteActor', this, this.actorDeleted);
     this.get('actorPropertyUpdateEventEmitter').off('updateActorProperty', this, this.actorPropertyChanged);
 
+    Mousetrap.reset();
+
     this.resizeNotificationService.off('windowResizedLowLatency',
     this, this.resizeRenderer);
+  },
+
+  // Mouse events
+  mouseMove: function(e) {
+    // Track mouse position over this component
+    this.currMousePos.x = e.pageX;
+    this.currMousePos.y = e.pageY;
+
+    // Update modifying mode
+    switch (this.get('currModifyMode')) {
+      case MODES.TRANSLATE:
+        this.updateTranslateMode(e.pageX, e.pageY);
+        break;
+      case MODES.ROTATE:
+        this.updateRotateMode(e.pageX, e.pageY);
+        break;
+      case MODES.SCALE:
+        this.updateScaleMode(e.pageX, e.pageY);
+        break;
+    }
   },
 
   actorChanged: function() {
@@ -213,8 +270,27 @@ export default Ember.Component.extend({
       this.resetModifyChanges();
     }
     this.set('currModifyMode', MODES.TRANSLATE);
-    console.log('enter TRANSLATE mode');
+
+    // Remove selection rectangle
+    this.removeSelectionRect();
+
+    // Track required properties
+    this.mousePosBeforeModify.x = this.currMousePos.x;
+    this.mousePosBeforeModify.y = this.currMousePos.y;
+
+    this.actorPosBeforeModify.x = this.get('selected.position.x');
+    this.actorPosBeforeModify.y = this.get('selected.position.y');
   },
+  updateTranslateMode: function(mouseX, mouseY) {
+    var pair = this.instModelHash[this.get('selected.id')];
+    if (pair) {
+      pair.inst.position.set(
+        this.actorPosBeforeModify.x + (mouseX - this.mousePosBeforeModify.x),
+        this.actorPosBeforeModify.y + (mouseY - this.mousePosBeforeModify.y)
+      );
+    }
+  },
+
   enterRotateMode: function() {
     if (!this.get('selected') || this.get('currModifyMode') === MODES.ROTATE) {
       return;
@@ -226,6 +302,10 @@ export default Ember.Component.extend({
     this.set('currModifyMode', MODES.ROTATE);
     console.log('enter ROTATE mode');
   },
+  updateRotateMode: function(mouseX, mouseY) {
+
+  },
+
   enterScaleMode: function() {
     if (!this.get('selected') || this.get('currModifyMode') === MODES.SCALE) {
       return;
@@ -237,12 +317,28 @@ export default Ember.Component.extend({
     this.set('currModifyMode', MODES.SCALE);
     console.log('enter SCALE mode');
   },
+  updateScaleMode: function(mouseX, mouseY) {
+
+  },
+
   confirmModifyChanges: function() {
     if (!this.get('selected') || this.get('currModifyMode') === MODES.NORMAL) {
       return;
     }
+
+    var pair = this.instModelHash[this.get('selected.id')];
+    switch (this.get('currModifyMode')) {
+      case MODES.TRANSLATE:
+        this.get('selected').set('position', {
+          x: pair.inst.position.x,
+          y: pair.inst.position.y
+        });
+        this.drawRectForActorInstance(pair.inst);
+        console.log('confirm TRANSLATE');
+        break;
+    }
+
     this.set('currModifyMode', MODES.NORMAL);
-    console.log('confirm changes');
   },
   resetModifyChanges: function() {
     if (!this.get('selected') || this.get('currModifyMode') === MODES.NORMAL) {
