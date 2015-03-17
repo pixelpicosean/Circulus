@@ -10,6 +10,9 @@ export default Ember.ObjectController.extend(Ember.Evented, {
     toggleActorVisibility: function(actor) {
       console.log('Toggle visibility of %s', actor.get('name'));
     },
+    updateActorProperty: function(actor) {
+      this.trigger('updateActorProperty', actor);
+    },
     deleteActor: function(actor) {
       console.log('Delete %s', actor.get('name'));
       actor.deleteRecord();

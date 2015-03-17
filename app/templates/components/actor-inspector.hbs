@@ -13,47 +13,47 @@
     <li class="collection-header cyan white-text">TRANSFORM</li>
     <li class="collection-item row">
       <span class="col s5 right-align">x: </span>
-      <span class="col s7">{{input type="number" value=model.position.x}}</span>
+      <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" value=model.position.x}}</span>
     </li>
     <li class="collection-item row">
       <span class="col s5 right-align">y: </span>
-      <span class="col s7">{{input type="number" value=model.position.y}}</span>
+      <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" value=model.position.y}}</span>
     </li>
 
     <li class="collection-item row">
       <span class="col s5 right-align">rotation: </span>
-      <span class="col s7">{{input type="number" value=model.rotation}}</span>
+      <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" value=model.rotation}}</span>
     </li>
 
     <li class="collection-item row">
       <span class="col s5 right-align">scale.x: </span>
-      <span class="col s7">{{input type="number" step="0.1" value=model.scale.x}}</span>
+      <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" step="0.1" value=model.scale.x}}</span>
     </li>
     <li class="collection-item row">
       <span class="col s5 right-align">scale.y: </span>
-      <span class="col s7">{{input type="number" step="0.1" value=model.scale.y}}</span>
+      <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" step="0.1" value=model.scale.y}}</span>
     </li>
 
     <li class="collection-header cyan white-text">VISUAL</li>
     <li class="collection-item row">
       <span class="col s5 right-align">alpha: </span>
-      <span class="col s7">{{input type="number" min="0" max="1" step="0.1" value=model.alpha}}</span>
+      <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.1" value=model.alpha}}</span>
     </li>
 
     {{#if model.isAnimation}}
       <li class="collection-item row">
         <span class="col s5 right-align">anchor.x: </span>
-        <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
       </li>
       <li class="collection-item row">
         <span class="col s5 right-align">anchor.y: </span>
-        <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
       </li>
 
       <li class="collection-header cyan white-text">ANIMATION</li>
       <li class="collection-item row">
         <span class="col s5 right-align">speed: </span>
-        <span class="col s7">{{input type="number" value=model.speed}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" value=model.speed}}</span>
       </li>
 
       <li class="collection-item row">
@@ -69,16 +69,16 @@
       {{#if model.useSpritesheet}}
         <li class="collection-item row">
           <span class="col s5 right-align">spritesheet: </span>
-          <span class="col s7">{{input type="text" value=model.spritesheet}}</span>
+          <span class="col s7">{{input type="text" action="confirmChange" on="focus-out" value=model.spritesheet}}</span>
         </li>
 
         <li class="collection-item row">
           <span class="col s5 right-align">frame width: </span>
-          <span class="col s7">{{input type="number" min="1" step="1" value=model.frameWidth}}</span>
+          <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="1" step="1" value=model.frameWidth}}</span>
         </li>
         <li class="collection-item row">
           <span class="col s5 right-align">frame height: </span>
-          <span class="col s7">{{input type="number" min="1" step="1" value=model.frameHeight}}</span>
+          <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="1" step="1" value=model.frameHeight}}</span>
         </li>
       {{else}}
         <li class="collection-item row">
@@ -91,38 +91,38 @@
     {{#if model.isSprite}}
       <li class="collection-item row">
         <span class="col s5 right-align">anchor.x: </span>
-        <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
       </li>
       <li class="collection-item row">
         <span class="col s5 right-align">anchor.y: </span>
-        <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
       </li>
 
       <li class="collection-header cyan white-text">SPRITE</li>
       <li class="collection-item row">
         <span class="col s5 right-align">image: </span>
-        <span class="col s7">{{input type="text" value=model.image}}</span>
+        <span class="col s7">{{input type="text" action="confirmChange" on="focus-out" value=model.image}}</span>
       </li>
     {{/if}}
 
     {{#if model.isTilingSprite}}
       <li class="collection-item row">
         <span class="col s5 right-align">anchor.x: </span>
-        <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
       </li>
       <li class="collection-item row">
         <span class="col s5 right-align">anchor.y: </span>
-        <span class="col s7">{{input type="number" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
       </li>
 
       <li class="collection-header cyan white-text">TILING SPRITE</li>
       <li class="collection-item row">
         <span class="col s5 right-align">width: </span>
-        <span class="col s7">{{input type="number" min="0" step="1" value=model.width}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" step="1" value=model.width}}</span>
       </li>
       <li class="collection-item row">
         <span class="col s5 right-align">height: </span>
-        <span class="col s7">{{input type="number" min="0" step="1" value=model.height}}</span>
+        <span class="col s7">{{input type="number" action="confirmChange" on="focus-out" min="0" step="1" value=model.height}}</span>
       </li>
     {{/if}}
 

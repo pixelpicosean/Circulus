@@ -22,10 +22,15 @@ export default Ember.Component.extend({
    */
   selectedEditable: false,
   /**
-   * Delegate which fires actor delete events
+   * Event emitter which fires actor delete events
    * @type {Object}
    */
-  delegate: null,
+  actorDeleteEventEmitter: null,
+  /**
+   * Event emitter which fires actor property update events
+   * @type {Object}
+   */
+  actorPropertyUpdateEventEmitter: null,
 
   renderer: null,
   stage: null,
@@ -49,11 +54,6 @@ export default Ember.Component.extend({
     var self = this, selected;
     requestAnimationFrame(animate);
     function animate() {
-      selected = self.get('selected');
-      if (selected) {
-        self.syncInstOf(selected);
-      }
-
       self.get('renderer').render(self.get('stage'));
       requestAnimationFrame(animate);
     }
@@ -62,11 +62,13 @@ export default Ember.Component.extend({
     this.resizeNotificationService.on('windowResizedLowLatency', this, this.resizeRenderer);
     this.resizeRenderer();
 
-    // Listen to model delete events
-    this.get('delegate').on('deleteActor', this, this.actorDeleted);
+    // Listen to actor events
+    this.get('actorDeleteEventEmitter').on('deleteActor', this, this.actorDeleted);
+    this.get('actorPropertyUpdateEventEmitter').on('updateActorProperty', this, this.actorPropertyChanged);
   },
   willDestroyElement: function() {
-    this.get('delegate').off('deleteActor', this, this.actorDeleted);
+    this.get('actorDeleteEventEmitter').off('deleteActor', this, this.actorDeleted);
+    this.get('actorPropertyUpdateEventEmitter').off('updateActorProperty', this, this.actorPropertyChanged);
 
     this.resizeNotificationService.off('windowResizedLowLatency',
     this, this.resizeRenderer);
@@ -88,6 +90,12 @@ export default Ember.Component.extend({
     }.bind(this);
     loader.load();
   }.observes('actor').on('didInsertElement'),
+  actorPropertyChanged: function(actor) {
+    var pair = this.instModelHash[actor.get('id')];
+    if (pair) {
+      this.syncInstOf(actor);
+    }
+  },
   actorDeleted: function(actor) {
     var pair = this.instModelHash[actor.get('id')];
     if (pair) {

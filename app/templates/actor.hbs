@@ -11,13 +11,15 @@
     actor=model
     selected=selected
     selectedEditable=selectedEditable
-    delegate=controller}}
+    actorPropertyUpdateEventEmitter=controller
+    actorDeleteEventEmitter=controller}}
 </section>
 
 <aside class="side-panel right white z-depth-2">
   {{actor-inspector
     model=selected
-    editable=selectedEditable}}
+    editable=selectedEditable
+    updateActorProperty='updateActorProperty'}}
 </aside>
 
 {{outlet}}

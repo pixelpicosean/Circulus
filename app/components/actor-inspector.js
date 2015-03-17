@@ -5,5 +5,11 @@ export default Ember.Component.extend({
   layout: layout,
   classNames: ['actor-inspector'],
 
-  editable: true
+  editable: true,
+
+  actions: {
+    confirmChange: function() {
+      this.sendAction('updateActorProperty', this.get('model'));
+    }
+  }
 });
