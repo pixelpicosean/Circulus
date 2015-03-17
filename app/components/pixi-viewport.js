@@ -34,7 +34,9 @@ export default Ember.Component.extend({
 
   renderer: null,
   stage: null,
-  root: null,
+  root: null,           // contains ui and actor layer
+  uiContainer: null,    // contains ui instances
+  actorContainer: null, // contains actor instances
 
   instModelHash: {},
 
@@ -43,8 +45,13 @@ export default Ember.Component.extend({
     this.set('renderer', new PIXI.CanvasRenderer());
     this.set('stage', new PIXI.Stage());
     this.set('root', new PIXI.DisplayObjectContainer());
+    this.set('uiContainer', new PIXI.DisplayObjectContainer());
+    this.set('actorContainer', new PIXI.DisplayObjectContainer());
 
-    this.get('root.position').set(200, 0); // Do not hover by outliner
+    this.get('root').addChild(this.get('actorContainer'));
+    this.get('root').addChild(this.get('uiContainer'));
+
+    this.get('root.position').set(200, 0); // Do not hide by outliner
     this.get('stage').addChild(this.get('root'));
   },
   didInsertElement: function() {
@@ -76,7 +83,7 @@ export default Ember.Component.extend({
 
   actorChanged: function() {
     // Cleanup viewport
-    this.get('root').removeChildren();
+    this.get('actorContainer').removeChildren();
 
     // Create instances for actor and its children
     var actor = this.get('actor');
@@ -142,7 +149,7 @@ export default Ember.Component.extend({
     }
 
     // Add to parent
-    parent = parent || this.get('root');
+    parent = parent || this.get('actorContainer');
     parent.addChild(inst);
 
     // Create instances for children (Actor ONLY)
@@ -161,6 +168,24 @@ export default Ember.Component.extend({
       inst = new PIXI.MovieClip(actor.get('frames').map(function(frame) {
         return PIXI.Texture.fromImage(frame);
       }));
+      inst.interactive = true;
+      inst.click = function() {
+        console.log('touch %s', actor.get('name'));
+      };
+
+      // var rect = new PIXI.Graphics();
+      // rect.clear();
+      // rect.beginFill(0xffffff, 0.5);
+      // rect.drawRect(
+      //   pos.x - inst.width * anchor.x, pos.y - inst.height * anchor.y,
+      //   inst.width, inst.height
+      // );
+      // rect.endFill();
+      // rect.interactive = true;
+      // rect.click = function() {
+      //   console.log('touch animation rect');
+      // };
+      // this.get('uiContainer').addChild(rect);
     }
 
     // Save actor-instance pair to hash for later use
@@ -174,13 +199,17 @@ export default Ember.Component.extend({
     this.syncAnimationInst(actor, inst);
 
     // Add to parent
-    parent = parent || this.get('root');
+    parent = parent || this.get('actorContainer');
     parent.addChild(inst);
   },
   createSpriteInstance: function(actor, parent) {
     // Create sprite instance
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.Sprite(tex);
+    inst.interactive = true;
+    inst.click = function() {
+      console.log('touch %s', actor.get('name'));
+    };
 
     // Save actor-instance pair to hash for later use
     inst.id = actor.get('id');
@@ -193,13 +222,17 @@ export default Ember.Component.extend({
     this.syncSpriteInst(actor, inst);
 
     // Add to parent
-    parent = parent || this.get('root');
+    parent = parent || this.get('actorContainer');
     parent.addChild(inst);
   },
   createTilingSpriteInstance: function(actor, parent) {
     // Create tiling-sprite instance
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.TilingSprite(tex, actor.get('size.x'), actor.get('size.y'));
+    inst.interactive = true;
+    inst.click = function() {
+      console.log('touch %s', actor.get('name'));
+    };
 
     // Save actor-instance pair to hash for later use
     inst.id = actor.get('id');
@@ -212,7 +245,7 @@ export default Ember.Component.extend({
     this.syncTilingSpriteInst(actor, inst);
 
     // Add to parent
-    parent = parent || this.get('root');
+    parent = parent || this.get('actorContainer');
     parent.addChild(inst);
   },
 
