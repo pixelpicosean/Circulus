@@ -12,6 +12,8 @@ export default Ember.ObjectController.extend({
     },
     deleteActor: function(actor) {
       console.log('Delete %s', actor.get('name'));
+      actor.deleteRecord();
+      actor.save();
     }
   },
 

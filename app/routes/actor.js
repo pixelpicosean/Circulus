@@ -22,7 +22,9 @@ export default Ember.Route.extend({
         x: 0, y: 400
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
     child = this.store.push('tiling-sprite', {
       id: 3,
       name: 'Parallel2',
@@ -36,7 +38,9 @@ export default Ember.Route.extend({
         x: 0, y: 550
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
     child = this.store.push('tiling-sprite', {
       id: 4,
       name: 'Parallel3',
@@ -50,7 +54,9 @@ export default Ember.Route.extend({
         x: 0, y: 650
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
 
     // Add clouds
     child = this.store.push('sprite', {
@@ -61,7 +67,9 @@ export default Ember.Route.extend({
         x: 100, y: 100
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
     child = this.store.push('sprite', {
       id: 6,
       name: 'cloud2',
@@ -70,7 +78,9 @@ export default Ember.Route.extend({
         x: 300, y: 50
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
 
     // Add logo
     child = this.store.push('sprite', {
@@ -81,7 +91,9 @@ export default Ember.Route.extend({
         x: 100, y: 40
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
     child = this.store.push('sprite', {
       id: 8,
       name: 'LogoDog',
@@ -90,7 +102,9 @@ export default Ember.Route.extend({
         x: 200, y: 180
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
 
     // Add clouds
     child = this.store.push('sprite', {
@@ -101,7 +115,9 @@ export default Ember.Route.extend({
         x: 650, y: 100
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
     child = this.store.push('sprite', {
       id: 10,
       name: 'cloud4',
@@ -110,7 +126,9 @@ export default Ember.Route.extend({
         x: 700, y: 200
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
 
     // Add foreground
     child = this.store.push('tiling-sprite', {
@@ -126,7 +144,9 @@ export default Ember.Route.extend({
         x: 0, y: 700
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
     child = this.store.push('tiling-sprite', {
       id: 12,
       name: 'ground',
@@ -140,7 +160,9 @@ export default Ember.Route.extend({
         x: 0, y: 800
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
 
     // Add player
     child = this.store.push('animation', {
@@ -156,7 +178,9 @@ export default Ember.Route.extend({
         x: 100, y: 500
       }
     });
+    child.save();
     parent.get('children').pushObject(child);
+    parent.save();
 
     return this.store.find('actor', 1);
   }
