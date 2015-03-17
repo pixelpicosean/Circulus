@@ -16,7 +16,7 @@ export default Ember.Component.extend({
    */
   hoveredActions: [
     {
-      classes: ['fa fa-eye'],
+      classes: ['fa fa-eye-slash'],
       action: 'eye',
       types: [
         'actor',
@@ -33,7 +33,8 @@ export default Ember.Component.extend({
 
   actions: {
     eye: function(actionView) {
-      this.sendAction('toggleActorVisibility', actionView.get('model'));
+      actionView.toggleProperty('sticky');
+      this.sendAction('toggleActorVisibility', actionView.get('model'), !actionView.get('sticky'));
     },
     delete: function(actionView) {
       // Root cannot be deleted
