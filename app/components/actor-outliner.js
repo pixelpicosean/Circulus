@@ -5,12 +5,6 @@ export default Ember.Component.extend({
   layout: layout,
 
   /**
-   * Delegate controller which will receive actions (delete/toggle...)
-   * @type {Em.ObjectController}
-   */
-  delegate: null,
-
-  /**
    * The current selected actor
    * @type {Actor}
    */
@@ -21,20 +15,32 @@ export default Ember.Component.extend({
    * @type {Array}
    */
   hoveredActions: [
-    { classes: ['fa fa-eye'], action: 'eye', types: ['actor'] },
-    { classes: ['fa fa-trash-o'], action: 'delete' }
+    {
+      classes: ['fa fa-eye'],
+      action: 'eye',
+      types: [
+        'actor',
+        'animation',
+        'sprite',
+        'tiling-sprite'
+      ]
+    },
+    {
+      classes: ['fa fa-trash-o'],
+      action: 'delete'
+    }
   ],
 
   actions: {
     eye: function(actionView) {
-      this.get('delegate').send('toggleActorVisibility', actionView.get('model'));
+      this.sendAction('toggleActorVisibility', actionView.get('model'));
     },
     delete: function(actionView) {
-      this.get('delegate').send('deleteActor', actionView.get('model'));
+      this.sendAction('deleteActor', actionView.get('model'));
     }
   },
 
   selectedChanged: function() {
-    this.get('delegate').send('selectActor', this.get('selected'));
+    this.sendAction('selectActor', this.get('selected'));
   }.observes('selected')
 });

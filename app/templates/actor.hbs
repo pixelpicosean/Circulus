@@ -1,13 +1,23 @@
 <aside class="side-panel left white z-depth-2">
-  {{actor-outliner root=model delegate=controller}}
+  {{actor-outliner
+    root=model
+    selectActor='selectActor'
+    toggleActorVisibility='toggleActorVisibility'
+    deleteActor='deleteActor'}}
 </aside>
 
 <section class="z-depth-1">
-  {{pixi-viewport actor=model selected=selected selectedEditable=selectedEditable}}
+  {{pixi-viewport
+    actor=model
+    selected=selected
+    selectedEditable=selectedEditable}}
 </section>
 
 <aside class="side-panel right white z-depth-2">
-  {{actor-inspector model=selected editable=selectedEditable delegate=controller}}
+  {{actor-inspector
+    model=selected
+    editable=selectedEditable
+    delegate=controller}}
 </aside>
 
 {{outlet}}
