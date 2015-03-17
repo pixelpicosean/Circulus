@@ -42,9 +42,5 @@ export default Ember.Component.extend({
         this.sendAction('deleteActor', actionView.get('model'));
       }
     }
-  },
-
-  selectedChanged: function() {
-    this.sendAction('selectActor', this.get('selected'));
-  }.observes('selected')
+  }
 });

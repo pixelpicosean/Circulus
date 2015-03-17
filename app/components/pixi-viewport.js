@@ -38,6 +38,8 @@ export default Ember.Component.extend({
   uiContainer: null,    // contains ui instances
   actorContainer: null, // contains actor instances
 
+  selectionRect: null,
+
   instModelHash: {},
 
   willInsertElement: function() {
@@ -53,6 +55,10 @@ export default Ember.Component.extend({
 
     this.get('root.position').set(200, 0); // Do not hide by outliner
     this.get('stage').addChild(this.get('root'));
+
+    var rect = new PIXI.Graphics();
+    this.set('selectionRect', rect);
+    this.get('uiContainer').addChild(rect);
   },
   didInsertElement: function() {
     // Insert pixi canvas
@@ -115,6 +121,50 @@ export default Ember.Component.extend({
     this.get('renderer').resize(this.$().width(), this.$().height());
   },
 
+  actorClicked: function(actor, inst) {
+    this.set('selected', actor);
+    this.drawRectForActorInstance(inst);
+  },
+  drawRectForActorInstance: function(inst) {
+    var left = inst.position.x - inst.width * inst.anchor.x,
+      top = inst.position.y - inst.height * inst.anchor.y,
+      width = inst.width,
+      height = inst.height;
+
+    var rect = this.get('selectionRect');
+    rect.clear();
+    // Rectangle
+    rect.lineStyle(1, 0x03a9f4, 1);
+    rect.drawRect(
+      left, top,
+      width, height
+    );
+    // Left Top Circle
+    rect.lineStyle(1, 0xffffff, 1);
+    rect.drawCircle(left, top, 6);
+    rect.beginFill(0x03a9f4, 1);
+    rect.drawCircle(left, top, 6);
+    rect.endFill();
+    // Right Top Circle
+    rect.lineStyle(1, 0xffffff, 1);
+    rect.drawCircle(left + width, top, 6);
+    rect.beginFill(0x03a9f4, 1);
+    rect.drawCircle(left + width, top, 6);
+    rect.endFill();
+    // Right Bottom Circle
+    rect.lineStyle(1, 0xffffff, 1);
+    rect.drawCircle(left + width, top + height, 6);
+    rect.beginFill(0x03a9f4, 1);
+    rect.drawCircle(left + width, top + height, 6);
+    rect.endFill();
+    // Left Bottom Circle
+    rect.lineStyle(1, 0xffffff, 1);
+    rect.drawCircle(left, top + height, 6);
+    rect.beginFill(0x03a9f4, 1);
+    rect.drawCircle(left, top + height, 6);
+    rect.endFill();
+  },
+
   createInstance: function(actor, parent) {
     switch (actor.get('nodeType')) {
       case 'actor':
@@ -169,23 +219,10 @@ export default Ember.Component.extend({
         return PIXI.Texture.fromImage(frame);
       }));
       inst.interactive = true;
+      var self = this;
       inst.click = function() {
-        console.log('touch %s', actor.get('name'));
+        self.actorClicked(actor, inst);
       };
-
-      // var rect = new PIXI.Graphics();
-      // rect.clear();
-      // rect.beginFill(0xffffff, 0.5);
-      // rect.drawRect(
-      //   pos.x - inst.width * anchor.x, pos.y - inst.height * anchor.y,
-      //   inst.width, inst.height
-      // );
-      // rect.endFill();
-      // rect.interactive = true;
-      // rect.click = function() {
-      //   console.log('touch animation rect');
-      // };
-      // this.get('uiContainer').addChild(rect);
     }
 
     // Save actor-instance pair to hash for later use
@@ -207,8 +244,9 @@ export default Ember.Component.extend({
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.Sprite(tex);
     inst.interactive = true;
+    var self = this;
     inst.click = function() {
-      console.log('touch %s', actor.get('name'));
+      self.actorClicked(actor, inst);
     };
 
     // Save actor-instance pair to hash for later use
@@ -230,8 +268,9 @@ export default Ember.Component.extend({
     var tex = PIXI.Texture.fromImage(actor.get('image'));
     var inst = new PIXI.TilingSprite(tex, actor.get('size.x'), actor.get('size.y'));
     inst.interactive = true;
+    var self = this;
     inst.click = function() {
-      console.log('touch %s', actor.get('name'));
+      self.actorClicked(actor, inst);
     };
 
     // Save actor-instance pair to hash for later use
@@ -264,12 +303,15 @@ export default Ember.Component.extend({
           break;
         case 'animation':
           this.syncAnimationInst(actor, pair.inst);
+          this.drawRectForActorInstance(pair.inst);
           break;
         case 'sprite':
           this.syncSpriteInst(actor, pair.inst);
+          this.drawRectForActorInstance(pair.inst);
           break;
         case 'tiling-sprite':
           this.syncTilingSpriteInst(actor, pair.inst);
+          this.drawRectForActorInstance(pair.inst);
           break;
       }
     }
