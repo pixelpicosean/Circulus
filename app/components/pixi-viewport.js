@@ -164,8 +164,8 @@ export default Ember.Component.extend({
     this.set('selected', actor);
   },
   drawRectForActorInstance: function(inst) {
-    var left = inst.position.x - inst.width * inst.anchor.x,
-      top = inst.position.y - inst.height * inst.anchor.y,
+    var left = -inst.width * inst.anchor.x,
+      top = -inst.height * inst.anchor.y,
       width = inst.width,
       height = inst.height;
 
@@ -201,6 +201,12 @@ export default Ember.Component.extend({
     rect.beginFill(0x03a9f4, 1);
     rect.drawCircle(left, top + height, 6);
     rect.endFill();
+
+    // Sync position
+    rect.position.set(inst.position.x, inst.position.y);
+
+    // Sync rotation
+    rect.rotation = inst.rotation;
 
     // Show it
     rect.visible = true;
