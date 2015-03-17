@@ -21,6 +21,11 @@ export default Ember.Component.extend({
    * @type {Boolean}
    */
   selectedEditable: false,
+  /**
+   * Delegate which fires actor delete events
+   * @type {Object}
+   */
+  delegate: null,
 
   renderer: null,
   stage: null,
@@ -56,8 +61,13 @@ export default Ember.Component.extend({
     // Setup resizing service
     this.resizeNotificationService.on('windowResizedLowLatency', this, this.resizeRenderer);
     this.resizeRenderer();
+
+    // Listen to model delete events
+    this.get('delegate').on('deleteActor', this, this.actorDeleted);
   },
   willDestroyElement: function() {
+    this.get('delegate').off('deleteActor', this, this.actorDeleted);
+
     this.resizeNotificationService.off('windowResizedLowLatency',
     this, this.resizeRenderer);
   },
@@ -78,6 +88,13 @@ export default Ember.Component.extend({
     }.bind(this);
     loader.load();
   }.observes('actor').on('didInsertElement'),
+  actorDeleted: function(actor) {
+    var pair = this.instModelHash[actor.get('id')];
+    if (pair) {
+      // Remove instance of this actor from stage
+      pair.inst.parent.removeChild(pair.inst);
+    }
+  },
 
   resizeRenderer: function() {
     this.get('renderer').resize(this.$().width(), this.$().height());

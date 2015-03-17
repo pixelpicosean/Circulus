@@ -36,7 +36,10 @@ export default Ember.Component.extend({
       this.sendAction('toggleActorVisibility', actionView.get('model'));
     },
     delete: function(actionView) {
-      this.sendAction('deleteActor', actionView.get('model'));
+      // Root cannot be deleted
+      if (actionView.get('model.id') !== this.get('root.id')) {
+        this.sendAction('deleteActor', actionView.get('model'));
+      }
     }
   },
 

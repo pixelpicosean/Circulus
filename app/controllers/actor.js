@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.ObjectController.extend({
+export default Ember.ObjectController.extend(Ember.Evented, {
   selected: null,
   actions: {
     selectActor: function(actor) {
@@ -14,6 +14,8 @@ export default Ember.ObjectController.extend({
       console.log('Delete %s', actor.get('name'));
       actor.deleteRecord();
       actor.save();
+
+      this.trigger('deleteActor', actor);
     }
   },
 
