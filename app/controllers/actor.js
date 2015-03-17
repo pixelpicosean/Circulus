@@ -8,7 +8,8 @@ export default Ember.ObjectController.extend(Ember.Evented, {
       console.log('Actor %s selected', actor.get('title'));
     },
     toggleActorVisibility: function(actor) {
-      console.log('Toggle visibility of %s', actor.get('name'));
+      actor.toggleProperty('visible');
+      this.trigger('updateActorProperty', actor);
     },
     updateActorProperty: function(actor) {
       this.trigger('updateActorProperty', actor);

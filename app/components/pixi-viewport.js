@@ -51,7 +51,7 @@ export default Ember.Component.extend({
     // Insert pixi canvas
     this.$().append(this.get('renderer.view'));
     // Start run loop
-    var self = this, selected;
+    var self = this;
     requestAnimationFrame(animate);
     function animate() {
       self.get('renderer').render(self.get('stage'));
@@ -221,6 +221,10 @@ export default Ember.Component.extend({
 
     var pair = this.get('instModelHash')[actor.get('id')];
     if (pair) {
+      // Editor specific attributes
+      pair.inst.visible = actor.get('visible');
+
+      // Sync based on their type
       switch (actor.get('nodeType')) {
         case 'actor':
           this.syncActorInst(actor, pair.inst);
