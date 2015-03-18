@@ -10,6 +10,16 @@ var MODES = {
   SCALE: 3
 };
 
+/**
+ * Offset of actor container from left-top of screen.
+ * NOTE: This will be replaced by panning implementation
+ * @type {Object}
+ */
+var ROOT_OFFSET = {
+  x: 200,
+  y: 0
+};
+
 export default Ember.Component.extend({
   layout: layout,
   classNames: ['fullscreen'],
@@ -138,7 +148,7 @@ export default Ember.Component.extend({
     this.get('root').addChild(this.get('actorContainer'));
     this.get('root').addChild(this.get('uiContainer'));
 
-    this.get('root.position').set(200, 0); // Do not hide by outliner
+    this.get('root.position').set(ROOT_OFFSET.x, ROOT_OFFSET.y); // Do not hide by outliner
     this.get('stage').addChild(this.get('root'));
 
     var rect = new PIXI.Graphics();
@@ -287,8 +297,8 @@ export default Ember.Component.extend({
     this.mousePosBeforeModify.x = this.currMousePos.x;
     this.mousePosBeforeModify.y = this.currMousePos.y;
 
-    this.actorPosBeforeModify.x = this.get('selected.position.x');
-    this.actorPosBeforeModify.y = this.get('selected.position.y');
+    this.actorPosBeforeModify.x = this.get('selected.position.x') + ROOT_OFFSET.x;
+    this.actorPosBeforeModify.y = this.get('selected.position.y') + ROOT_OFFSET.y;
 
     // Change mode flag
     this.set('currModifyMode', MODES.TRANSLATE);
@@ -297,8 +307,8 @@ export default Ember.Component.extend({
     var pair = this.instModelHash[this.get('selected.id')];
     if (pair) {
       pair.inst.position.set(
-        this.actorPosBeforeModify.x + (mouseX - this.mousePosBeforeModify.x),
-        this.actorPosBeforeModify.y + (mouseY - this.mousePosBeforeModify.y)
+        this.actorPosBeforeModify.x + (mouseX - (this.mousePosBeforeModify.x + ROOT_OFFSET.x)),
+        this.actorPosBeforeModify.y + (mouseY - (this.mousePosBeforeModify.y + ROOT_OFFSET.y))
       );
     }
   },
@@ -317,8 +327,8 @@ export default Ember.Component.extend({
 
     // Track required properties
     this.mouseToActorAngleBeforeModify = Math.atan2(
-      this.currMousePos.y - this.get('selected.position.y'),
-      this.currMousePos.x - this.get('selected.position.x')
+      this.currMousePos.y - (this.get('selected.position.y') + ROOT_OFFSET.y),
+      this.currMousePos.x - (this.get('selected.position.x') + ROOT_OFFSET.x)
     );
     this.actorRotationBeforeModify = this.get('selected.rotation');
 
@@ -327,8 +337,8 @@ export default Ember.Component.extend({
   },
   updateRotateMode: function(mouseX, mouseY) {
     var mouseToActorAngle = Math.atan2(
-      mouseY - this.get('selected.position.y'),
-      mouseX - this.get('selected.position.x')
+      mouseY - (this.get('selected.position.y') + ROOT_OFFSET.y),
+      mouseX - (this.get('selected.position.x') + ROOT_OFFSET.x)
     );
     var pair = this.instModelHash[this.get('selected.id')];
     if (pair) {
@@ -349,8 +359,8 @@ export default Ember.Component.extend({
     this.removeSelectionRect();
 
     // Track required properties
-    var x = this.get('selected.position.x'),
-      y = this.get('selected.position.y');
+    var x = this.get('selected.position.x') + ROOT_OFFSET.x,
+      y = this.get('selected.position.y') + ROOT_OFFSET.y;
     this.mouseToActorDistBeforeModify = Math.sqrt(
       (this.currMousePos.x - x) * (this.currMousePos.x - x) +
       (this.currMousePos.y - y) * (this.currMousePos.y - y)
@@ -359,8 +369,8 @@ export default Ember.Component.extend({
     this.set('currModifyMode', MODES.SCALE);
   },
   updateScaleMode: function(mouseX, mouseY) {
-    var x = this.get('selected.position.x'),
-      y = this.get('selected.position.y');
+    var x = this.get('selected.position.x') + ROOT_OFFSET.x,
+      y = this.get('selected.position.y') + ROOT_OFFSET.y;
     var dist = Math.sqrt(
       (mouseX - x) * (mouseX - x) +
       (mouseY - y) * (mouseY - y)
