@@ -260,7 +260,7 @@ export default Ember.Component.extend({
     }
   },
 
-  // Modifying Modes Begin
+  // Modifying Modes Begin --------------------------------
   enterTranslateMode: function() {
     if (!this.get('selected') || this.get('currModifyMode') === MODES.TRANSLATE) {
       return;
@@ -269,7 +269,6 @@ export default Ember.Component.extend({
     if (this.get('currModifyMode') !== MODES.NORMAL) {
       this.resetModifyChanges();
     }
-    this.set('currModifyMode', MODES.TRANSLATE);
 
     // Remove selection rectangle
     this.removeSelectionRect();
@@ -280,6 +279,9 @@ export default Ember.Component.extend({
 
     this.actorPosBeforeModify.x = this.get('selected.position.x');
     this.actorPosBeforeModify.y = this.get('selected.position.y');
+
+    // Change mode flag
+    this.set('currModifyMode', MODES.TRANSLATE);
   },
   updateTranslateMode: function(mouseX, mouseY) {
     var pair = this.instModelHash[this.get('selected.id')];
@@ -334,7 +336,6 @@ export default Ember.Component.extend({
           y: pair.inst.position.y
         });
         this.drawRectForActorInstance(pair.inst);
-        console.log('confirm TRANSLATE');
         break;
     }
 
@@ -344,10 +345,14 @@ export default Ember.Component.extend({
     if (!this.get('selected') || this.get('currModifyMode') === MODES.NORMAL) {
       return;
     }
+
+    // Re-sync instance back with model
+    this.syncInstOf(this.get('selected'));
+
+    // Reset mode flag
     this.set('currModifyMode', MODES.NORMAL);
-    console.log('reset changes');
   },
-  // Modifying Modes End
+  // Modifying Modes End ----------------------------------
 
   resizeRenderer: function() {
     // Resize renderer
