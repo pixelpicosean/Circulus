@@ -82,6 +82,11 @@ export default Ember.Component.extend({
    * @type {Number}
    */
   mouseToActorAngleBeforeModify: 0,
+  /**
+   * Distance between cursor and actor before modify
+   * @type {Number}
+   */
+  mouseToActorDistBeforeModify: 0,
 
   /**
    * Position of selected actor before enter modifying mode
@@ -339,11 +344,36 @@ export default Ember.Component.extend({
     if (this.get('currModifyMode') !== MODES.NORMAL) {
       this.resetModifyChanges();
     }
+
+    // Remove selection rectangle
+    this.removeSelectionRect();
+
+    // Track required properties
+    var x = this.get('selected.position.x'),
+      y = this.get('selected.position.y');
+    this.mouseToActorDistBeforeModify = Math.sqrt(
+      (this.currMousePos.x - x) * (this.currMousePos.x - x) +
+      (this.currMousePos.y - y) * (this.currMousePos.y - y)
+    );
+
     this.set('currModifyMode', MODES.SCALE);
-    console.log('enter SCALE mode');
   },
   updateScaleMode: function(mouseX, mouseY) {
+    var x = this.get('selected.position.x'),
+      y = this.get('selected.position.y');
+    var dist = Math.sqrt(
+      (mouseX - x) * (mouseX - x) +
+      (mouseY - y) * (mouseY - y)
+    );
 
+    var scaleFactor = dist / this.mouseToActorDistBeforeModify;
+    var pair = this.instModelHash[this.get('selected.id')];
+    if (pair) {
+      pair.inst.scale.set(
+        this.get('selected.scale.x') * scaleFactor,
+        this.get('selected.scale.y') * scaleFactor
+      );
+    }
   },
 
   confirmModifyChanges: function() {
@@ -362,6 +392,13 @@ export default Ember.Component.extend({
         break;
       case MODES.ROTATE:
         this.get('selected').set('rotation', pair.inst.rotation);
+        this.drawRectForActorInstance(pair.inst);
+        break;
+      case MODES.SCALE:
+        this.get('selected').set('scale', {
+          x: pair.inst.scale.x,
+          y: pair.inst.scale.y
+        });
         this.drawRectForActorInstance(pair.inst);
         break;
     }
