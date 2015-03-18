@@ -77,6 +77,11 @@ export default Ember.Component.extend({
   currMousePos: {
     x: 0, y: 0
   },
+  /**
+   * Rotation of vector from cursor to actor
+   * @type {Number}
+   */
+  mouseToActorAngleBeforeModify: 0,
 
   /**
    * Position of selected actor before enter modifying mode
@@ -301,11 +306,29 @@ export default Ember.Component.extend({
     if (this.get('currModifyMode') !== MODES.NORMAL) {
       this.resetModifyChanges();
     }
+
+    // Remove selection rectangle
+    this.removeSelectionRect();
+
+    // Track required properties
+    this.mouseToActorAngleBeforeModify = Math.atan2(
+      this.currMousePos.y - this.get('selected.position.y'),
+      this.currMousePos.x - this.get('selected.position.x')
+    );
+    this.actorRotationBeforeModify = this.get('selected.rotation');
+
+    // Change mode flag
     this.set('currModifyMode', MODES.ROTATE);
-    console.log('enter ROTATE mode');
   },
   updateRotateMode: function(mouseX, mouseY) {
-
+    var mouseToActorAngle = Math.atan2(
+      mouseY - this.get('selected.position.y'),
+      mouseX - this.get('selected.position.x')
+    );
+    var pair = this.instModelHash[this.get('selected.id')];
+    if (pair) {
+      pair.inst.rotation = this.actorRotationBeforeModify + (mouseToActorAngle - this.mouseToActorAngleBeforeModify);
+    }
   },
 
   enterScaleMode: function() {
@@ -335,6 +358,10 @@ export default Ember.Component.extend({
           x: pair.inst.position.x,
           y: pair.inst.position.y
         });
+        this.drawRectForActorInstance(pair.inst);
+        break;
+      case MODES.ROTATE:
+        this.get('selected').set('rotation', pair.inst.rotation);
         this.drawRectForActorInstance(pair.inst);
         break;
     }
