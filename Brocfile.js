@@ -20,21 +20,6 @@ app.import('bower_components/font-awesome/fonts/fontawesome-webfont.woff', { des
 app.import('bower_components/font-awesome/fonts/fontawesome-webfont.woff2', { destDir: 'fonts' });
 app.import('bower_components/font-awesome/fonts/FontAwesome.otf', { destDir: 'fonts' });
 
-// Materialize
-app.import('bower_components/materialize/dist/css/materialize.css');
-
-app.import('bower_components/materialize/dist/font/roboto/Roboto-Regular.ttf', { destDir: 'font/roboto' });
-app.import('bower_components/materialize/dist/font/roboto/Roboto-Bold.ttf', { destDir: 'font/roboto' });
-app.import('bower_components/materialize/dist/font/roboto/Roboto-Thin.ttf', { destDir: 'font/roboto' });
-app.import('bower_components/materialize/dist/font/roboto/Roboto-Light.ttf', { destDir: 'font/roboto' });
-app.import('bower_components/materialize/dist/font/roboto/Roboto-Medium.ttf', { destDir: 'font/roboto' });
-app.import('bower_components/materialize/dist/font/material-design-icons/Material-Design-Icons.eot', { destDir: 'font/material-design-icons' });
-app.import('bower_components/materialize/dist/font/material-design-icons/Material-Design-Icons.svg', { destDir: 'font/material-design-icons' });
-app.import('bower_components/materialize/dist/font/material-design-icons/Material-Design-Icons.ttf', { destDir: 'font/material-design-icons' });
-app.import('bower_components/materialize/dist/font/material-design-icons/Material-Design-Icons.woff', { destDir: 'font/material-design-icons' });
-
-app.import('bower_components/materialize/dist/js/materialize.js');
-
 // Pixi.js as Renderer
 app.import('bower_components/pixi.js/bin/pixi.dev.js');
 
