@@ -1,6 +1,12 @@
 @import 'layout.css';
+@import 'typography.css';
 @import 'input.css';
+@import 'theme.css';
 @import 'actor-inspector.css';
+
+li {
+  list-style-type: none;
+}
 
 .list-header {
   margin: 0;
@@ -37,6 +43,10 @@
   bottom: 0;
   overflow: hidden;
   overflow-y: auto;
+}
+
+.center-align {
+  text-align: center;
 }
 
 /* Select */
