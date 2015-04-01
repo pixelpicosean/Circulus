@@ -13,7 +13,6 @@
     "ember-qunit-notifications": "0.0.7",
     "qunit": "~1.17.1",
     "font-awesome": "~4.3.0",
-    "pixi.js": "~2.2.8",
     "ember-localstorage-adapter": "~0.5.2",
     "mousetrap": "~1.4.6"
   }

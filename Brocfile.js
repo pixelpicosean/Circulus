@@ -20,7 +20,4 @@ app.import('bower_components/font-awesome/fonts/fontawesome-webfont.woff', { des
 app.import('bower_components/font-awesome/fonts/fontawesome-webfont.woff2', { destDir: 'fonts' });
 app.import('bower_components/font-awesome/fonts/FontAwesome.otf', { destDir: 'fonts' });
 
-// Pixi.js as Renderer
-app.import('bower_components/pixi.js/bin/pixi.dev.js');
-
 module.exports = app.toTree();
