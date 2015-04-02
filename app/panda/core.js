@@ -4,18 +4,15 @@ var Renderer = Em.Object.extend({
   canvas: null,
   context: null,
 
-  init: function(canvasId) {
-    this.canvas = document.getElementById(canvasId);
+  clearBeforeRender: true,
+  backgroundColor: '#000000',
+  roundPixels: true,
+  scaleMode: 'linear',
 
-    if (!this.canvas) {
-      this.canvas = document.createElement('canvas');
-      this.canvas.id = canvasId;
-      document.body.style.margin = 0;
-      document.body.appendChild(this.canvas);
-      this._show();
-    }
-
+  init: function(settings) {
+    this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
+    this._show();
 
     if ('imageSmoothingEnabled' in this.context)
       this.smoothProperty = 'imageSmoothingEnabled';
@@ -31,6 +28,10 @@ var Renderer = Em.Object.extend({
     this._resize(960, 640);
   },
 
+  getElement: function() {
+    return this.get('canvas');
+  },
+
   /**
       Resize canvas.
       @method _resize
@@ -41,6 +42,7 @@ var Renderer = Em.Object.extend({
   _resize: function(width, height) {
     this.canvas.width = width;
     this.canvas.height = height;
+    this.context[this.smoothProperty] = (this.scaleMode === 'linear');
   },
 
   /**
@@ -90,7 +92,13 @@ var Renderer = Em.Object.extend({
       @private
   **/
   _clear: function() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.backgroundColor) {
+      this.context.fillStyle = this.backgroundColor;
+      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    else {
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
   },
 
   /**
@@ -109,22 +117,5 @@ var Renderer = Em.Object.extend({
     container._render(this.context);
   }
 });
-
-/**
-    @attribute {Boolean} clearBeforeRender
-    @default true
-**/
-Renderer.clearBeforeRender = true;
-/**
-    @attribute {String} backgroundColor
-    @default #000000
-**/
-Renderer.backgroundColor = '#000000';
-/**
-    @attribute {Boolean} roundPixels
-    @default false
-**/
-Renderer.roundPixels = false;
-Renderer.scaleMode = 'linear';
 
 export default Renderer;

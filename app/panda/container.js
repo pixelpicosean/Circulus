@@ -1,5 +1,6 @@
 import Em from 'ember';
-import { Rectangle } from 'geom/shapes';
+import Vector from './geom/vector';
+import { Rectangle } from './geom/shapes';
 
 export var Matrix = Em.Object.extend({
   a: 1,
@@ -15,7 +16,7 @@ export var Container = Em.Object.extend({
   scale: null,
   anchor: null,
   alpha: 1,
-  children: [],
+  children: null,
   parent: null,
   rotation: 0,
   visible: true,
@@ -48,6 +49,7 @@ export var Container = Em.Object.extend({
   }.property(),
 
   init: function() {
+    this.children = [];
     this.position = new Vector();
     this.scale = new Vector(1, 1);
     this.anchor = new Vector();
@@ -161,7 +163,7 @@ export var Container = Em.Object.extend({
     for (var i = this.children.length - 1; i >= 0; i--) {
       var child = this.children[i];
       if (!child.visible || child.alpha <= 0) continue;
-      child.updateTransform();
+      // child.updateTransform();
     }
   },
 
