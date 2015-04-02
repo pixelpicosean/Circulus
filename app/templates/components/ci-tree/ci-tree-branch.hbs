@@ -1,0 +1,3 @@
+{{#each child in children}}
+    {{ci-tree/ci-tree-node model=child requestReload=child.requestReload tree=view.tree async=controller.async targetObject=controller.targetObject}}
+{{/each}}
