@@ -15,6 +15,7 @@
     "font-awesome": "~4.3.0",
     "pixi.js": "~2.2.9",
     "mousetrap": "~1.5.2",
-    "ember-localstorage-adapter": "~0.5.3"
+    "ember-localstorage-adapter": "~0.5.3",
+    "semantic-ui": "~1.12.3"
   }
 }
