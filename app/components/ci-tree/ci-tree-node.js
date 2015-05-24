@@ -92,7 +92,7 @@ export default Ember.Component.extend({
   leaf: (function() {
     return !this.get('model.children') || this.get('model.children.length') === 0;
   }).property('model.children.length'),
-  tagName: 'li',
+  tagName: 'div',
   classNameBindings: ['styleClasses', 'expandedClasses', 'leafClasses'],
   styleClasses: (function() {
     var _ref;

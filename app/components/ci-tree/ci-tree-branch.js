@@ -19,7 +19,6 @@ export default Ember.Component.extend({
    * branch being opened
    */
   async: false,
-  tagName: 'ul',
   layoutName: layout,
   classNameBindings: ['styleClasses'],
   styleClasses: 'ci-tree-branch fa-ul'

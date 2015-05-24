@@ -1,131 +1,131 @@
-<h4 class="list-header center-align white-text blue noselect">INSPECTOR</h4>
-<ul class="collection with-header scroll-y white">
+<div class="item"><b>INSPECTOR</b></div>
+<div class="ui list">
 
-  <li class="collection-header cyan white-text">ACTOR</li>
-  <li class="collection-item row">
-    <span class="col s5 right-align">name: </span>
-    <span class="col s7">{{input class="ui input" type="text" focus-out="confirmChange" enter="confirmChange" value=model.name}}</span>
-  </li>
+  <div class="ui small header">ACTOR</div>
+  <div class="ui fluid labeled input">
+    <span class="ui label">name</span>
+    {{input type="text" focus-out="confirmChange" enter="confirmChange" value=model.name}}
+  </div>
 
   {{!-- Properties of ONLY child actors --}}
   {{#if editable}}
 
-    <li class="collection-header cyan white-text">TRANSFORM</li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">x: </span>
-      <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" value=model.position.x}}</span>
-    </li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">y: </span>
-      <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" value=model.position.y}}</span>
-    </li>
+    <div class="ui small header">TRANSFORM</div>
+    <div class="ui fluid labeled input">
+      <span class="ui label">x</span>
+      {{input type="number" focus-out="confirmChange" enter="confirmChange" value=model.position.x}}
+    </div>
+    <div class="ui fluid labeled input">
+      <span class="ui label">y</span>
+      {{input type="number" focus-out="confirmChange" enter="confirmChange" value=model.position.y}}
+    </div>
 
-    <li class="collection-item row">
-      <span class="col s5 right-align">rotation: </span>
-      <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" value=model.rotation}}</span>
-    </li>
+    <div class="ui fluid labeled input">
+      <span class="ui label">rotation</span>
+      {{input type="number" focus-out="confirmChange" enter="confirmChange" value=model.rotation}}
+    </div>
 
-    <li class="collection-item row">
-      <span class="col s5 right-align">scale.x: </span>
-      <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" step="0.1" value=model.scale.x}}</span>
-    </li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">scale.y: </span>
-      <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" step="0.1" value=model.scale.y}}</span>
-    </li>
+    <div class="ui fluid labeled input">
+      <span class="ui label">scale.x</span>
+      {{input type="number" focus-out="confirmChange" enter="confirmChange" step="0.1" value=model.scale.x}}
+    </div>
+    <div class="ui fluid labeled input">
+      <span class="ui label">scale.y</span>
+      {{input type="number" focus-out="confirmChange" enter="confirmChange" step="0.1" value=model.scale.y}}
+    </div>
 
-    <li class="collection-header cyan white-text">VISUAL</li>
-    <li class="collection-item row">
-      <span class="col s5 right-align">alpha: </span>
-      <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.1" value=model.alpha}}</span>
-    </li>
+    <div class="ui small header">VISUAL</div>
+    <div class="ui fluid labeled input">
+      <span class="ui label">alpha</span>
+      {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.1" value=model.alpha}}
+    </div>
 
     {{#if model.isAnimation}}
-      <li class="collection-item row">
-        <span class="col s5 right-align">anchor.x: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
-      </li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">anchor.y: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
-      </li>
+      <div class="ui fluid labeled input">
+        <span class="ui label">anchor.x</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.x}}
+      </div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">anchor.y</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.y}}
+      </div>
 
-      <li class="collection-header cyan white-text">ANIMATION</li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">speed: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" value=model.speed}}</span>
-      </li>
+      <div class="ui small header">ANIMATION</div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">speed</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" value=model.speed}}
+      </div>
 
-      <li class="collection-item row">
-        <span class="col s5 right-align">loop: </span>
-        <span class="col s7">{{input class="ui input" type="checkbox" checked=model.loop}}</span>
-      </li>
+      <div class="ui fluid toggle checkbox">
+        <label class="ui label">loop</label>
+        {{input type="checkbox" checked=model.loop}}
+      </div>
 
-      <li class="collection-item row">
-        <span class="col s5 right-align">use sheet: </span>
-        <span class="col s7">{{input class="ui input" type="checkbox" checked=model.useSpritesheet}}</span>
-      </li>
+      <div class="ui fluid labeled input">
+        <span class="ui label">use sheet</span>
+        {{input type="checkbox" checked=model.useSpritesheet}}
+      </div>
 
       {{#if model.useSpritesheet}}
-        <li class="collection-item row">
-          <span class="col s5 right-align">spritesheet: </span>
-          <span class="col s7">{{input class="ui input" type="text" focus-out="confirmChange" enter="confirmChange" value=model.spritesheet}}</span>
-        </li>
+        <div class="ui fluid labeled input">
+          <span class="ui label">spritesheet</span>
+          {{input type="text" focus-out="confirmChange" enter="confirmChange" value=model.spritesheet}}
+        </div>
 
-        <li class="collection-item row">
-          <span class="col s5 right-align">frame width: </span>
-          <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="1" step="1" value=model.frameWidth}}</span>
-        </li>
-        <li class="collection-item row">
-          <span class="col s5 right-align">frame height: </span>
-          <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="1" step="1" value=model.frameHeight}}</span>
-        </li>
+        <div class="ui fluid labeled input">
+          <span class="ui label">frame width</span>
+          {{input type="number" focus-out="confirmChange" enter="confirmChange" min="1" step="1" value=model.frameWidth}}
+        </div>
+        <div class="ui fluid labeled input">
+          <span class="ui label">frame height</span>
+          {{input type="number" focus-out="confirmChange" enter="confirmChange" min="1" step="1" value=model.frameHeight}}
+        </div>
       {{else}}
-        <li class="collection-item row">
-          <span class="col s5 right-align">frames: </span>
-          <span class="col s7">{{input class="ui input" type="button" value="EDIT" class="btn"}}</span>
-        </li>
+        <div class="ui fluid labeled input">
+          <span class="ui label">frames</span>
+          {{input type="button" value="EDIT" class="btn"}}
+        </div>
       {{/if}}
     {{/if}}
 
     {{#if model.isSprite}}
-      <li class="collection-item row">
-        <span class="col s5 right-align">anchor.x: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
-      </li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">anchor.y: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
-      </li>
+      <div class="ui fluid labeled input">
+        <span class="ui label">anchor.x</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.x}}
+      </div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">anchor.y</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.y}}
+      </div>
 
-      <li class="collection-header cyan white-text">SPRITE</li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">image: </span>
-        <span class="col s7">{{input class="ui input" type="text" focus-out="confirmChange" enter="confirmChange" value=model.image}}</span>
-      </li>
+      <div class="ui small header">SPRITE</div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">image</span>
+        {{input type="text" focus-out="confirmChange" enter="confirmChange" value=model.image}}
+      </div>
     {{/if}}
 
     {{#if model.isTilingSprite}}
-      <li class="collection-item row">
-        <span class="col s5 right-align">anchor.x: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.x}}</span>
-      </li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">anchor.y: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.y}}</span>
-      </li>
+      <div class="ui fluid labeled input">
+        <span class="ui label">anchor.x</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.x}}
+      </div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">anchor.y</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" max="1" step="0.5" value=model.anchor.y}}
+      </div>
 
-      <li class="collection-header cyan white-text">TILING SPRITE</li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">width: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" step="1" value=model.width}}</span>
-      </li>
-      <li class="collection-item row">
-        <span class="col s5 right-align">height: </span>
-        <span class="col s7">{{input class="ui input" type="number" focus-out="confirmChange" enter="confirmChange" min="0" step="1" value=model.height}}</span>
-      </li>
+      <div class="ui small header">TILING SPRITE</div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">width</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" step="1" value=model.width}}
+      </div>
+      <div class="ui fluid labeled input">
+        <span class="ui label">height</span>
+        {{input type="number" focus-out="confirmChange" enter="confirmChange" min="0" step="1" value=model.height}}
+      </div>
     {{/if}}
 
   {{/if}}
 
-</ul>
+</div>
