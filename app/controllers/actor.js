@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.ObjectController.extend(Ember.Evented, {
+export default Ember.Controller.extend(Ember.Evented, {
   selected: null,
   actions: {
     toggleActorVisibility: function(actor, visible) {

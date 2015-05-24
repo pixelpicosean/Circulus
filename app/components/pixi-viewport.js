@@ -57,14 +57,6 @@ export default Ember.Component.extend({
   actorContainer: null, // contains actor instances
 
   /**
-   * A graphics instance listening to clicking at nowhere,
-   * used to de-select current selected actor.
-   * This object is added to stage directly, so it will not
-   * be affected by view panning, scaling...
-   * @type {PIXI.Graphics}
-   */
-  emptyLayer: null,
-  /**
    * Selection box around current selected actor
    * @type {PIXI.Graphics}
    */
@@ -121,29 +113,25 @@ export default Ember.Component.extend({
   willInsertElement: function() {
     // Setup Pixi
     this.set('renderer', new PIXI.CanvasRenderer());
-    this.set('stage', new PIXI.Stage());
+    var stage = new PIXI.Stage();
+    this.set('stage', stage);
 
     this.set('root', new PIXI.DisplayObjectContainer());
 
     this.set('uiContainer', new PIXI.DisplayObjectContainer());
     this.set('actorContainer', new PIXI.DisplayObjectContainer());
 
-    // Add a layer to listen to "click nothing" event
-    var layer = new PIXI.Graphics(),
-      self = this;
-    layer.interactive = true;
-    layer.click = function() {
+    // Let stage listen to "click nothing" event
+    stage.click = function() {
       // Deselect in normal mode
-      if (self.get('currModifyMode') === MODES.NORMAL) {
-        self.set('selected', undefined);
-        self.removeSelectionRect();
+      if (this.get('currModifyMode') === MODES.NORMAL) {
+        this.set('selected', undefined);
+        this.removeSelectionRect();
       }
       else {
-        self.confirmModifyChanges();
+        this.confirmModifyChanges();
       }
-    };
-    this.get('stage').addChild(layer);
-    this.set('emptyLayer', layer);
+    }.bind(this);
 
     this.get('root').addChild(this.get('actorContainer'));
     this.get('root').addChild(this.get('uiContainer'));
@@ -431,12 +419,6 @@ export default Ember.Component.extend({
   resizeRenderer: function() {
     // Resize renderer
     this.get('renderer').resize(this.$().width(), this.$().height());
-
-    // Resize empty layer
-    var layer = this.get('emptyLayer');
-    layer.beginFill(0xffffff, 0);
-    layer.drawRect(0, 0, this.$().width(), this.$().height());
-    layer.endFill();
   },
 
   drawRectForActorInstance: function(inst) {
