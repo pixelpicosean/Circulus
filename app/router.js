@@ -7,4 +7,5 @@ var Router = Ember.Router.extend({
 
 export default Router.map(function() {
   this.route('actor');
+  this.route('tilemap');
 });
