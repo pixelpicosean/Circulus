@@ -25,6 +25,8 @@ export default Ember.Component.extend({
 
   willInsertElement: function() {
     // Setup Pixi
+    PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
+
     this.set('renderer', new PIXI.CanvasRenderer());
     var stage = new PIXI.Stage();
     this.set('stage', stage);
@@ -49,6 +51,59 @@ export default Ember.Component.extend({
     this.resizeRenderer();
 
     // Setup shortcuts
+
+    // Load assets
+    var assetsToLoad = [
+      'media/tiles.png'
+    ];
+    var loader = new PIXI.AssetLoader(assetsToLoad);
+    loader.onComplete = function() {
+
+      // Map data
+      var map = {
+        width: 4,
+        height: 4,
+        tileSize: 16,
+        tileset: 'media/tiles.png',
+        data: [
+          [0, 1, 2, 3],
+          [8, 9, 10, 11],
+          [16, 17, 18, 19],
+          [24, 25, 26, 27]
+        ]
+      };
+
+      // Create textures for each tile
+      var tilesetTexture = PIXI.Texture.fromImage(map.tileset);
+      var tilesetBaseTex = tilesetTexture.baseTexture;
+      var tilesInRow = (tilesetTexture.height / map.tileSize) | 0;
+      var tilesInCol = (tilesetTexture.width / map.tileSize) | 0;
+
+      var tileTextures = [];
+
+      for (var r = 0; r < tilesInRow; r++) {
+        for (var q = 0; q < tilesInCol; q++) {
+          tileTextures.push(new PIXI.Texture(tilesetBaseTex, new PIXI.Rectangle(q * map.tileSize, r * map.tileSize, map.tileSize, map.tileSize)));
+        }
+      }
+
+      var container = this.get('root');
+      container.scale.set(4, 4);
+
+      // Create tiles
+      var idx, tile;
+      for (var r = 0; r < map.height; r++) {
+        for (var q = 0; q < map.width; q++) {
+          idx = map.data[r][q];
+
+          tile = new PIXI.Sprite(tileTextures[idx]);
+          tile.position.set(q * map.tileSize, r * map.tileSize);
+
+          container.addChild(tile);
+        }
+      }
+    }.bind(this);
+    loader.load();
   },
   willDestroyElement: function() {
     Mousetrap.reset();
