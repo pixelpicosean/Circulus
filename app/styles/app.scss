@@ -5,3 +5,130 @@
   width: 100%;
   height: 100%;
 }
+
+.ui.dark {
+  color: #9f9f9f;
+  background-color: #272727;
+}
+
+.ui.header {
+  margin: 0;
+  padding-right: 20px;
+
+  font-size: 16px;
+  line-height: 40px;
+  width: 100%;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ui.header.inverted {
+  color: #9f9f9f;
+}
+
+.ui.blue-bg {
+  color: white;
+  background-color: #53a7f2;
+}
+
+.ui.header.center {
+  text-align: center;
+}
+
+.ui.sidebar .section {
+  padding: 10px;
+}
+
+input::selection {
+  background-color: #cce2ff;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=button].block {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+
+  border: none;
+}
+
+.property-edit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  -webkit-user-select: none;
+}
+
+.property-edit input {
+  margin-left: 3px;
+
+  background-color: #202020;
+  border-color: #202020;
+
+  outline: 0;
+}
+
+.property-edit input[type=number],
+.property-edit input[type=text],
+.property-edit input[type=spinner] {
+  padding: 2px;
+  box-sizing: border-box;
+  resize: none;
+
+  border: 1px solid #777;
+  border-radius: 3px;
+
+  font-size: 12px;
+  text-align: right;
+
+  text-decoration: none;
+
+  color: #9f9f9f;
+}
+
+.property-edit input[type=button] {
+  color: #868686;
+  background-color: #363636;
+}
+
+.property-edit input:nth-of-type(1) {
+  margin-left: 0;
+}
+
+.property-edit input:focus {
+  background-color: #1a1a1a;
+  border-color: #38b3f6;
+}
+
+.property-edit > label {
+  min-width: 35%;
+
+  margin: 0;
+  margin-right: 8px;
+  padding: 0;
+
+  font-size: 12px;
+  line-height: 2em;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+
+  flex-shrink: 0;
+}
+
+.property-edit > :not(label):not(input[type=checkbox]) {
+  flex-grow: 1;
+  min-width: 0;
+}

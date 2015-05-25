@@ -1,9 +1,12 @@
-<aside class="ui vertical inverted sidebar left visible">
-  {{actor-outliner
-    root=model
-    selected=selected
-    toggleActorVisibility='toggleActorVisibility'
-    deleteActor='deleteActor'}}
+<aside class="ui sidebar left dark visible">
+  <div class="ui large header center blue-bg"><b>INSPECTOR</b></div>
+  <section class="section">
+    {{actor-outliner
+      root=model
+      selected=selected
+      toggleActorVisibility='toggleActorVisibility'
+      deleteActor='deleteActor'}}
+  </section>
 </aside>
 
 <section class="fullscreen">
@@ -15,11 +18,14 @@
     actorDeleteEventEmitter=controller}}
 </section>
 
-<aside class="ui vertical inverted sidebar right visible">
-  {{actor-inspector
-    model=selected
-    editable=selectedEditable
-    updateActorProperty='updateActorProperty'}}
+<aside class="ui sidebar right dark visible">
+  <div class="ui large header center blue-bg"><b>INSPECTOR</b></div>
+  <section class="section">
+    {{actor-inspector
+      model=selected
+      editable=selectedEditable
+      updateActorProperty='updateActorProperty'}}
+    </section>
 </aside>
 
 {{outlet}}
