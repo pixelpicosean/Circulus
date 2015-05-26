@@ -3,6 +3,10 @@ import layout from '../templates/components/tilemap-editor';
 /* global PIXI */
 /* global Mousetrap */
 
+var TOOLS = {
+  BRUSH: 0,
+  ERASE: 1
+};
 
 /**
  * Offset of actor container from left-top of screen.
@@ -22,6 +26,19 @@ export default Ember.Component.extend({
   stage: null,
   root: null,           // contains ui and map layer
   uiContainer: null,    // contains ui instances
+
+  currTool: TOOLS.BRUSH,
+
+  brush: null,
+  erase: null,
+
+  tileIdx: 0,
+
+  map: null,
+  scale: null,
+
+  tileTextures: null,
+  tileSpriteGrid: null,
 
   willInsertElement: function() {
     // Setup Pixi
@@ -51,6 +68,25 @@ export default Ember.Component.extend({
     this.resizeRenderer();
 
     // Setup shortcuts
+    Mousetrap.bind('b', function() {
+      this.useBrush();
+    }.bind(this));
+    Mousetrap.bind('e', function() {
+      this.useErase();
+    }.bind(this));
+
+    Mousetrap.bind('1', function() {
+      this.pickTile(0);
+    }.bind(this));
+    Mousetrap.bind('2', function() {
+      this.pickTile(1);
+    }.bind(this));
+    Mousetrap.bind('3', function() {
+      this.pickTile(2);
+    }.bind(this));
+    Mousetrap.bind('4', function() {
+      this.pickTile(3);
+    }.bind(this));
 
     // Load assets
     var assetsToLoad = [
@@ -60,18 +96,19 @@ export default Ember.Component.extend({
     loader.onComplete = function() {
 
       // Map data
-      var map = {
+      var map = this.map = {
         width: 4,
         height: 4,
         tileSize: 16,
         tileset: 'media/tiles.png',
         data: [
-          [0, 1, 2, 3],
-          [8, 9, 10, 11],
-          [16, 17, 18, 19],
-          [24, 25, 26, 27]
+          [-1, -1, -1, -1],
+          [-1, -1, -1, -1],
+          [-1, -1, -1, -1],
+          [-1, -1, -1, -1]
         ]
       };
+      this.scale = { x: 4, y: 4 };
 
       // Create textures for each tile
       var tilesetTexture = PIXI.Texture.fromImage(map.tileset);
@@ -79,29 +116,49 @@ export default Ember.Component.extend({
       var tilesInRow = (tilesetTexture.height / map.tileSize) | 0;
       var tilesInCol = (tilesetTexture.width / map.tileSize) | 0;
 
-      var tileTextures = [];
-
+      this.tileTextures = [];
       for (var r = 0; r < tilesInRow; r++) {
         for (var q = 0; q < tilesInCol; q++) {
-          tileTextures.push(new PIXI.Texture(tilesetBaseTex, new PIXI.Rectangle(q * map.tileSize, r * map.tileSize, map.tileSize, map.tileSize)));
+          this.tileTextures.push(new PIXI.Texture(tilesetBaseTex, new PIXI.Rectangle(q * map.tileSize, r * map.tileSize, map.tileSize, map.tileSize)));
         }
       }
 
-      var container = this.get('root');
-      container.scale.set(4, 4);
+      // Map container
+      this.mapLayer = new PIXI.DisplayObjectContainer();
+      this.get('root').addChild(this.mapLayer);
+      this.mapLayer.scale.set(this.scale.x, this.scale.y);
 
-      // Create tiles
-      var idx, tile;
-      for (var r = 0; r < map.height; r++) {
-        for (var q = 0; q < map.width; q++) {
-          idx = map.data[r][q];
+      // UI/tool container
+      this.toolLayer = new PIXI.DisplayObjectContainer();
+      this.get('root').addChild(this.toolLayer);
 
-          tile = new PIXI.Sprite(tileTextures[idx]);
-          tile.position.set(q * map.tileSize, r * map.tileSize);
-
-          container.addChild(tile);
+      // Fill tiles grid with null
+      this.tileSpriteGrid = [];
+      var tilesRow;
+      for (var rr = 0; rr < map.height; rr++) {
+        tilesRow = [];
+        for (var qq = 0; qq < map.width; qq++) {
+          tilesRow.push(null);
         }
+        this.tileSpriteGrid.push(tilesRow);
       }
+
+      // Setup tool sprites
+      var brush = this.brush = new PIXI.Sprite(this.tileTextures[0]);
+      brush.visible = false;
+      this.toolLayer.addChild(brush);
+      brush.scale.set(4, 4);
+
+      var erase = this.erase = new PIXI.Graphics();
+      erase.beginFill(0xf44336, 0.5);
+      erase.drawRect(0, 0, this.map.tileSize, this.map.tileSize);
+      erase.endFill();
+      brush.visible = false;
+      this.toolLayer.addChild(erase);
+      erase.scale.set(4, 4);
+
+      // Set default tool
+      this.useBrush();
     }.bind(this);
     loader.load();
   },
@@ -113,7 +170,94 @@ export default Ember.Component.extend({
   },
 
   // Mouse events
-  mouseMove: function(e) {},
+  mouseMove: function(e) {
+    var tileSize = 16 * 4;
+
+    var cursorX = e.pageX - ROOT_OFFSET.x;
+    var cursorY = e.pageY - ROOT_OFFSET.y;
+
+    var q = (cursorX / tileSize) | 0;
+    var r = (cursorY / tileSize) | 0;
+    if (this.brush && this.brush.visible) {
+      this.brush.position.set(q * tileSize, r * tileSize);
+    }
+    else if (this.erase && this.erase.visible) {
+      this.erase.position.set(q * tileSize, r * tileSize);
+    }
+  },
+  mouseDown: function(e) {
+    var tileSize = 16 * 4;
+
+    var cursorX = e.pageX - ROOT_OFFSET.x;
+    var cursorY = e.pageY - ROOT_OFFSET.y;
+
+    var q = (cursorX / tileSize) | 0;
+    var r = (cursorY / tileSize) | 0;
+
+    switch (this.get('currTool')) {
+      case TOOLS.BRUSH:
+        if (q < this.map.width && r < this.map.height) {
+          this.paintTileAt(q, r, this.tileIdx);
+        }
+        break;
+      case TOOLS.ERASE:
+        if (q < this.map.width && r < this.map.height) {
+          this.eraseTileAt(q, r);
+        }
+        break;
+    }
+  },
+
+  pickTile: function(idx) {
+    // Set current tile index
+    this.tileIdx = idx;
+
+    // Update brush texture
+    this.brush.setTexture(this.tileTextures[idx]);
+  },
+
+  useBrush: function() {
+    this.set('currTool', TOOLS.BRUSH);
+    this.erase.visible = false;
+    this.brush.visible = true;
+  },
+  useErase: function() {
+    this.set('currTool', TOOLS.ERASE);
+    this.brush.visible = false;
+    this.erase.visible = true;
+  },
+
+  // Tool behaviors
+  paintTileAt: function(q, r, idx) {
+    // Update idx for the map
+    this.map.data[r][q] = idx;
+
+    // Update tile sprite
+    var tileSprite = this.tileSpriteGrid[r][q];
+    if (tileSprite) {
+      tileSprite.setTexture(this.tileTextures[idx]);
+      tileSprite.visible = true;
+    }
+    else {
+      // Create a new tile sprite
+      tileSprite = new PIXI.Sprite(this.tileTextures[idx]);
+      tileSprite.position.set(q * this.map.tileSize, r * this.map.tileSize);
+
+      this.mapLayer.addChild(tileSprite);
+
+      // Save to grid matrix
+      this.tileSpriteGrid[r][q] = tileSprite;
+    }
+  },
+
+  eraseTileAt: function(q, r) {
+    this.map.data[r][q] = -1;
+
+    var tileSprite = this.tileSpriteGrid[r][q];
+    if (tileSprite) {
+      tileSprite.visible = false;
+    }
+  },
 
   resizeRenderer: function() {
     // Resize renderer
