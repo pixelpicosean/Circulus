@@ -14,47 +14,102 @@ var TOOLS = {
  * @type {Object}
  */
 var ROOT_OFFSET = {
-  x: 200,
+  x: 0,
   y: 0
 };
 
 export default Ember.Component.extend({
   layout: layout,
-  classNames: ['fullscreen'],
+  tagName: 'canvas',
+  classNames: ['pixelate'],
 
   renderer: null,
   stage: null,
   root: null,           // contains ui and map layer
-  uiContainer: null,    // contains ui instances
+
+  mapLayer: null,
+  uiLayer: null,
 
   currTool: TOOLS.BRUSH,
 
+  /**
+   * Rectangle that shows the border of map
+   * @type {PIXI.Graphics}
+   */
+  borderRect: null,
+  /**
+   * The tileset image for picking tiles
+   * @type {PIXI.DisplayObjectContainer}
+   */
+  tilesetView: null,
+  tilePicker: null,
+  /**
+   * Sprite under cursor
+   * @type {PIXI.Sprite}
+   */
   brush: null,
+  /**
+   * Eraser rectangle under cursor
+   * @type {PIXI.Graphics}
+   */
   erase: null,
 
+  /**
+   * Current selected tile index
+   * @type {Number}
+   */
   tileIdx: 0,
 
   map: null,
+  /**
+   * Map scale
+   * @type {PIXI.Point}
+   */
   scale: null,
+  /**
+   * How many tiles in a row of tileset
+   * @type {Number}
+   */
+  tilesInRow: 1,
+  /**
+   * How many tiles in a column of tileset
+   * @type {Number}
+   */
+  tilesInCol: 1,
 
+  /**
+   * Texture array that contains textures for each tile in tile index order.
+   * @type {Array}
+   */
   tileTextures: null,
+  /**
+   * A 2x2 array that stores tile sprite instances
+   * @type {Array}
+   */
   tileSpriteGrid: null,
 
+  /**
+   * Pixel ratio of device that running the editor
+   * @type {Number}
+   */
+  pixelRatio: 1,
+
   willInsertElement: function() {
+    this.set('pixelRatio', window.devicePixelRatio || 1);
+
     // Setup Pixi
     PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
-
-    this.set('renderer', new PIXI.CanvasRenderer());
-    var stage = new PIXI.Stage();
-    this.set('stage', stage);
+    this.set('renderer', new PIXI.CanvasRenderer(480, 320, {
+      view: this.get('element'),
+      resolution: this.get('pixelRatio')
+    }));
+    this.set('stage', new PIXI.Stage());
 
     this.set('root', new PIXI.DisplayObjectContainer());
     this.get('root.position').set(ROOT_OFFSET.x, ROOT_OFFSET.y); // Do not hide by outliner
     this.get('stage').addChild(this.get('root'));
   },
   didInsertElement: function() {
-    // Insert pixi canvas
-    this.$().append(this.get('renderer.view'));
     // Start run loop
     var self = this;
     requestAnimationFrame(animate);
@@ -75,17 +130,9 @@ export default Ember.Component.extend({
       this.useErase();
     }.bind(this));
 
-    Mousetrap.bind('1', function() {
-      this.pickTile(0);
-    }.bind(this));
-    Mousetrap.bind('2', function() {
-      this.pickTile(1);
-    }.bind(this));
-    Mousetrap.bind('3', function() {
-      this.pickTile(2);
-    }.bind(this));
-    Mousetrap.bind('4', function() {
-      this.pickTile(3);
+    Mousetrap.bind('tab', function() {
+      this.toggleTilePicker();
+      return false;
     }.bind(this));
 
     // Load assets
@@ -96,29 +143,18 @@ export default Ember.Component.extend({
     loader.onComplete = function() {
 
       // Map data
-      var map = this.map = {
-        width: 4,
-        height: 4,
-        tileSize: 16,
-        tileset: 'media/tiles.png',
-        data: [
-          [-1, -1, -1, -1],
-          [-1, -1, -1, -1],
-          [-1, -1, -1, -1],
-          [-1, -1, -1, -1]
-        ]
-      };
-      this.scale = { x: 4, y: 4 };
+      var map = this.map = this.createNewMap(8, 8, 16, 'media/tiles.png');
+      this.scale = new PIXI.Point(4, 4);
 
       // Create textures for each tile
       var tilesetTexture = PIXI.Texture.fromImage(map.tileset);
       var tilesetBaseTex = tilesetTexture.baseTexture;
-      var tilesInRow = (tilesetTexture.height / map.tileSize) | 0;
-      var tilesInCol = (tilesetTexture.width / map.tileSize) | 0;
+      var tilesInRow = this.tilesInRow = (tilesetTexture.width / map.tileSize) | 0;
+      var tilesInCol = this.tilesInCol = (tilesetTexture.height / map.tileSize) | 0;
 
       this.tileTextures = [];
-      for (var r = 0; r < tilesInRow; r++) {
-        for (var q = 0; q < tilesInCol; q++) {
+      for (var r = 0; r < tilesInCol; r++) {
+        for (var q = 0; q < tilesInRow; q++) {
           this.tileTextures.push(new PIXI.Texture(tilesetBaseTex, new PIXI.Rectangle(q * map.tileSize, r * map.tileSize, map.tileSize, map.tileSize)));
         }
       }
@@ -129,8 +165,8 @@ export default Ember.Component.extend({
       this.mapLayer.scale.set(this.scale.x, this.scale.y);
 
       // UI/tool container
-      this.toolLayer = new PIXI.DisplayObjectContainer();
-      this.get('root').addChild(this.toolLayer);
+      this.uiLayer = new PIXI.DisplayObjectContainer();
+      this.get('root').addChild(this.uiLayer);
 
       // Fill tiles grid with null
       this.tileSpriteGrid = [];
@@ -143,19 +179,58 @@ export default Ember.Component.extend({
         this.tileSpriteGrid.push(tilesRow);
       }
 
-      // Setup tool sprites
+      // Setup UI/tool sprites
+      var borderRect = this.borderRect = new PIXI.Graphics();
+      borderRect.lineStyle(1, 0xffffff, 0.75);
+      borderRect.beginFill(0x000000, 0);
+      borderRect.drawRect(0, 0, this.map.tileSize * this.map.width * this.scale.x, this.map.tileSize * this.map.height * this.scale.y);
+      borderRect.endFill();
+      borderRect.cacheAsBitmap = true;
+      borderRect.interactive = true;
+      borderRect.mousedown = this.onMouseDown.bind(this);
+      borderRect.mousemove = this.onMouseMove.bind(this);
+      this.uiLayer.addChild(borderRect);
+
       var brush = this.brush = new PIXI.Sprite(this.tileTextures[0]);
       brush.visible = false;
-      this.toolLayer.addChild(brush);
+      this.uiLayer.addChild(brush);
       brush.scale.set(4, 4);
 
       var erase = this.erase = new PIXI.Graphics();
       erase.beginFill(0xf44336, 0.5);
       erase.drawRect(0, 0, this.map.tileSize, this.map.tileSize);
       erase.endFill();
+      erase.cacheAsBitmap = true;
       brush.visible = false;
-      this.toolLayer.addChild(erase);
+      this.uiLayer.addChild(erase);
       erase.scale.set(4, 4);
+
+      var tilesetView = this.tilesetView = new PIXI.DisplayObjectContainer();
+      tilesetView.interactive = true;
+      tilesetView.mousedown = this.onDownOverTileset.bind(this);
+      tilesetView.mousemove = this.onHoverTileset.bind(this);
+      tilesetView.visible = false;
+      this.uiLayer.addChild(tilesetView);
+      tilesetView.scale.set(4, 4);
+
+      var tilesetViewBG = new PIXI.Graphics();
+      tilesetViewBG.beginFill(0x000000, 0.7);
+      tilesetViewBG.drawRect(0, 0, tilesetTexture.width, tilesetTexture.height);
+      tilesetViewBG.endFill();
+      tilesetViewBG.cacheAsBitmap = true;
+      tilesetView.addChild(tilesetViewBG);
+
+      var tilesetImg = new PIXI.Sprite(tilesetTexture);
+      tilesetView.addChild(tilesetImg);
+
+      // Rectangle as picker cursor
+      var tilePicker = this.tilePicker = new PIXI.Graphics();
+      tilePicker.lineStyle(1, 0xff9800, 0.75);
+      tilePicker.beginFill(0x000000, 0);
+      tilePicker.drawRect(0, 0, this.map.tileSize, this.map.tileSize);
+      tilePicker.endFill();
+      tilePicker.cacheAsBitmap = true;
+      // tilesetView.addChild(tilePicker);
 
       // Set default tool
       this.useBrush();
@@ -169,12 +244,35 @@ export default Ember.Component.extend({
     this, this.resizeRenderer);
   },
 
+  toggleTilePicker: function() {
+    if (this.tilesetView.visible) {
+      this.hideTilePicker();
+    }
+    else {
+      this.showTilePicker();
+    }
+  },
+  showTilePicker: function() {
+    // Position the view at center
+    var renderer = this.get('renderer');
+    this.tilesetView.position.set(
+      renderer.width / this.pixelRatio * 0.5 - this.tilesetView.width * 0.5,
+      renderer.height / this.pixelRatio * 0.5 - this.tilesetView.height * 0.5
+    );
+    // Show it
+    this.tilesetView.visible = true;
+  },
+  hideTilePicker: function() {
+    // Hide it
+    this.tilesetView.visible = false;
+  },
+
   // Mouse events
-  mouseMove: function(e) {
+  onMouseMove: function(e) {
     var tileSize = 16 * 4;
 
-    var cursorX = e.pageX - ROOT_OFFSET.x;
-    var cursorY = e.pageY - ROOT_OFFSET.y;
+    var cursorX = e.global.x;
+    var cursorY = e.global.y;
 
     var q = (cursorX / tileSize) | 0;
     var r = (cursorY / tileSize) | 0;
@@ -185,11 +283,11 @@ export default Ember.Component.extend({
       this.erase.position.set(q * tileSize, r * tileSize);
     }
   },
-  mouseDown: function(e) {
+  onMouseDown: function(e) {
     var tileSize = 16 * 4;
 
-    var cursorX = e.pageX - ROOT_OFFSET.x;
-    var cursorY = e.pageY - ROOT_OFFSET.y;
+    var cursorX = e.global.x;
+    var cursorY = e.global.y;
 
     var q = (cursorX / tileSize) | 0;
     var r = (cursorY / tileSize) | 0;
@@ -206,6 +304,35 @@ export default Ember.Component.extend({
         }
         break;
     }
+  },
+  onHoverTileset: function(e) {
+    var tileSize = 16 * 4;
+
+    var cursorX = e.global.x - this.tilesetView.x;
+    var cursorY = e.global.y - this.tilesetView.y;
+
+    var q = (cursorX / tileSize) | 0;
+    var r = (cursorY / tileSize) | 0;
+
+    this.tilePicker.position.set(q * tileSize, r * tileSize);
+  },
+  onDownOverTileset: function(e) {
+    var tileSize = 16 * 4;
+
+    var cursorX = e.global.x - this.tilesetView.x;
+    var cursorY = e.global.y - this.tilesetView.y;
+
+    var q = (cursorX / tileSize) | 0;
+    var r = (cursorY / tileSize) | 0;
+
+    // Index of the picked tile
+    var idx = r * this.tilesInRow + q;
+
+    // console.log('pick tile: %d', idx);
+    this.pickTile(idx);
+
+    // Hide tileset
+    this.hideTilePicker();
   },
 
   pickTile: function(idx) {
@@ -259,8 +386,32 @@ export default Ember.Component.extend({
     }
   },
 
+  createNewMap: function(width, height, tileSize, tileset) {
+    // Map object
+    var map = {
+      width: width,
+      height: height,
+      tileSize: tileSize,
+      tileset: tileset,
+      data: null
+    };
+
+    // Fill data with "0"
+    var data = [], row;
+    for (var r = 0; r < height; r++) {
+      row = [];
+      for (var q = 0; q < width; q++) {
+        row.push(0);
+      }
+      data.push(row);
+    }
+
+    map.data = data;
+
+    return map;
+  },
+
   resizeRenderer: function() {
-    // Resize renderer
     this.get('renderer').resize(this.$().width(), this.$().height());
   }
 });
