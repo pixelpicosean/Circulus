@@ -94,6 +94,8 @@ export default Ember.Component.extend({
    */
   pixelRatio: 1,
 
+  isMouseDown: false,
+
   willInsertElement: function() {
     this.set('pixelRatio', window.devicePixelRatio || 1);
 
@@ -189,6 +191,7 @@ export default Ember.Component.extend({
       borderRect.interactive = true;
       borderRect.mousedown = this.onMouseDown.bind(this);
       borderRect.mousemove = this.onMouseMove.bind(this);
+      borderRect.mouseup = borderRect.mouseupoutside = this.onMouseUp.bind(this);
       this.uiLayer.addChild(borderRect);
 
       var brush = this.brush = new PIXI.Sprite(this.tileTextures[0]);
@@ -226,11 +229,11 @@ export default Ember.Component.extend({
       // Rectangle as picker cursor
       var tilePicker = this.tilePicker = new PIXI.Graphics();
       tilePicker.lineStyle(1, 0xff9800, 0.75);
-      tilePicker.beginFill(0x000000, 0);
       tilePicker.drawRect(0, 0, this.map.tileSize, this.map.tileSize);
-      tilePicker.endFill();
+      tilePicker.visible = false;
       tilePicker.cacheAsBitmap = true;
-      // tilesetView.addChild(tilePicker);
+      tilePicker.scale.set(4, 4);
+      this.uiLayer.addChild(tilePicker);
 
       // Set default tool
       this.useBrush();
@@ -261,10 +264,36 @@ export default Ember.Component.extend({
     );
     // Show it
     this.tilesetView.visible = true;
+
+    // Show tile picker cursor
+    this.tilePicker.visible = true;
+
+    // Hide brush/erase
+    switch (this.currTool) {
+      case TOOLS.BRUSH:
+        this.brush.visible = false;
+        break;
+      case TOOLS.ERASE:
+        this.erase.visible = false;
+        break;
+    }
   },
   hideTilePicker: function() {
     // Hide it
     this.tilesetView.visible = false;
+
+    // Hide tile picker cursor
+    this.tilePicker.visible = false;
+
+    // Show brush/erase
+    switch (this.currTool) {
+      case TOOLS.BRUSH:
+        this.brush.visible = true;
+        break;
+      case TOOLS.ERASE:
+        this.erase.visible = true;
+        break;
+    }
   },
 
   // Mouse events
@@ -276,11 +305,28 @@ export default Ember.Component.extend({
 
     var q = (cursorX / tileSize) | 0;
     var r = (cursorY / tileSize) | 0;
+
+    // Update position of tool cursor
     if (this.brush && this.brush.visible) {
       this.brush.position.set(q * tileSize, r * tileSize);
     }
     else if (this.erase && this.erase.visible) {
       this.erase.position.set(q * tileSize, r * tileSize);
+    }
+
+    if (this.isMouseDown) {
+      switch (this.get('currTool')) {
+        case TOOLS.BRUSH:
+          if (q < this.map.width && r < this.map.height) {
+            this.paintTileAt(q, r, this.tileIdx);
+          }
+          break;
+        case TOOLS.ERASE:
+          if (q < this.map.width && r < this.map.height) {
+            this.eraseTileAt(q, r);
+          }
+          break;
+      }
     }
   },
   onMouseDown: function(e) {
@@ -291,6 +337,8 @@ export default Ember.Component.extend({
 
     var q = (cursorX / tileSize) | 0;
     var r = (cursorY / tileSize) | 0;
+
+    this.isMouseDown = true;
 
     switch (this.get('currTool')) {
       case TOOLS.BRUSH:
@@ -305,7 +353,14 @@ export default Ember.Component.extend({
         break;
     }
   },
+  onMouseUp: function() {
+    this.isMouseDown = false;
+  },
   onHoverTileset: function(e) {
+    if (!this.tilesetView.visible) {
+      return;
+    }
+
     var tileSize = 16 * 4;
 
     var cursorX = e.global.x - this.tilesetView.x;
@@ -314,9 +369,16 @@ export default Ember.Component.extend({
     var q = (cursorX / tileSize) | 0;
     var r = (cursorY / tileSize) | 0;
 
-    this.tilePicker.position.set(q * tileSize, r * tileSize);
+    this.tilePicker.position.set(
+      q * tileSize + this.tilesetView.x,
+      r * tileSize + this.tilesetView.y
+    );
   },
   onDownOverTileset: function(e) {
+    if (!this.tilesetView.visible) {
+      return;
+    }
+
     var tileSize = 16 * 4;
 
     var cursorX = e.global.x - this.tilesetView.x;
